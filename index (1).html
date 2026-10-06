@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#161c4a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Verzamelboek">
+<title>Verzamelboek</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%92%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#dcebff; --page2:#f3e9ff; --sleeve:#ffffff; --ink:#18204a; --soft:#56608c; --line:#bccbe8;
+  --night:#161c4a; --night2:#2a2f86; --gold:#ffcb3d; --gold-d:#d99a0b; --ok:#2fae6a; --ok-d:#1d7a48;
+  --pink:#ff6fb5; --cyan:#36d6e7;
+  --empty:#2a3478; --shadow:0 3px 0 rgba(22,28,74,.22);
+  --holo:linear-gradient(115deg,#7af0ff,#b48cff 30%,#ff8fd0 50%,#ffe47a 70%,#7affc1);
+  --disp:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--page:#0f1433;--page2:#1b1240;--sleeve:#1d2556;--ink:#eef2ff;--soft:#a9b2d9;--line:#344080;--empty:#232c66;--shadow:0 3px 0 rgba(0,0,0,.45);color-scheme:dark}
+}
+:root[data-theme="dark"]{--page:#0f1433;--page2:#1b1240;--sleeve:#1d2556;--ink:#eef2ff;--soft:#a9b2d9;--line:#344080;--empty:#232c66;--shadow:0 3px 0 rgba(0,0,0,.45);color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;min-height:100%;color:var(--ink);
+  background:
+    radial-gradient(circle at 20px 20px,rgba(255,111,181,.16) 0 3px,transparent 4px) 0 0/120px 120px,
+    radial-gradient(circle at 80px 70px,rgba(54,214,231,.18) 0 4px,transparent 5px) 0 0/120px 120px,
+    radial-gradient(circle at 60px 10px,rgba(255,203,61,.22) 0 2px,transparent 3px) 0 0/90px 90px,
+    linear-gradient(180deg,var(--page),var(--page2)) fixed;
+  font-family:"Baloo 2","Trebuchet MS","Segoe UI",system-ui,sans-serif;font-size:18px;line-height:1.35;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+svg.ti{width:1em;height:1em;fill:currentColor;flex:0 0 auto}
+.press{transition:transform .12s ease}
+.press:active{transform:scale(.95)}
+
+/* ---------- inlog ---------- */
+.gate{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;
+  background:radial-gradient(circle at 15% 20%,rgba(255,255,255,.9) 0 1px,transparent 1.5px) 0 0/90px 70px,
+             radial-gradient(circle at 60% 70%,rgba(255,255,255,.6) 0 1px,transparent 1.5px) 0 0/130px 90px,
+             linear-gradient(180deg,var(--night),var(--night2))}
+.gate[hidden]{display:none}
+.gate form{width:min(100%,400px);background:var(--sleeve);color:var(--ink);border-radius:26px;padding:26px 22px 22px;box-shadow:0 20px 60px rgba(0,0,0,.45);position:relative}
+.gate form::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;border-radius:26px 26px 0 0;background:var(--holo)}
+.gate h1{font-family:var(--disp);font-weight:400;font-size:2rem;margin:4px 0 2px;line-height:1.05}
+.gate p{margin:0 0 16px;color:var(--soft);font-weight:600}
+.gate label{display:block;font-weight:800;margin:12px 2px 6px}
+.gate input[type=text],.gate input[type=password]{width:100%;font-size:1.2rem;font-weight:700;padding:12px 14px;border-radius:14px;border:3px solid var(--line);background:var(--page)}
+.gate input:focus{border-color:var(--gold);outline:none}
+.gate .rem{display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:700;color:var(--soft)}
+.gate .rem input{width:22px;height:22px;accent-color:var(--ok)}
+.gate .err{color:#d33a4a;font-weight:800;min-height:1.4em;margin:10px 2px 0}
+.gate.shake form{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+/* ---------- kop ---------- */
+header.top{position:relative;color:#fff;padding:16px 18px 24px;overflow:hidden;
+  background:radial-gradient(circle at 15% 20%,rgba(255,255,255,.9) 0 1px,transparent 1.5px) 0 0/90px 70px,
+             radial-gradient(circle at 60% 70%,rgba(255,255,255,.6) 0 1px,transparent 1.5px) 0 0/130px 90px,
+             linear-gradient(180deg,var(--night) 0%,var(--night2) 100%)}
+header.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:var(--holo);background-size:200% 100%;animation:foil 6s linear infinite}
+.wrap{max-width:1180px;margin-left:auto;margin-right:auto}
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.title{margin:0;font-family:var(--disp);font-weight:400;font-size:1.35rem;display:flex;align-items:center;gap:8px;min-width:0}
+.title span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.title svg{color:var(--gold);width:1.2em;height:1.2em}
+.hbtns{display:flex;gap:8px}
+.iconbtn{background:rgba(255,255,255,.14);border:0;border-radius:12px;padding:6px 12px;color:#fff;font-weight:700;display:flex;align-items:center;gap:6px}
+.hero{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:8px}
+.count{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.count b{font-family:var(--disp);font-weight:400;font-size:4.2rem;line-height:.9;color:var(--gold);text-shadow:0 4px 0 var(--gold-d),0 6px 14px rgba(0,0,0,.35)}
+.count span{font-size:1.3rem;font-weight:700}
+.rank{margin-left:auto;text-align:right}
+.rank strong{display:inline-block;font-family:var(--disp);font-weight:400;font-size:1.05rem;background:rgba(255,255,255,.14);padding:2px 12px;border-radius:999px}
+.rank small{display:block;font-size:.95rem;opacity:.85;font-weight:600;margin-top:4px}
+.bar{margin-top:14px;height:22px;border-radius:11px;background:rgba(0,0,0,.3);box-shadow:inset 0 2px 0 rgba(0,0,0,.3);overflow:hidden;
+  background-image:repeating-linear-gradient(90deg,transparent 0 calc(10% - 2px),rgba(255,255,255,.12) calc(10% - 2px) 10%)}
+.bar i{display:block;height:100%;width:0;border-radius:11px;transition:width .8s cubic-bezier(.2,1.4,.4,1);
+  background:linear-gradient(180deg,#ffe58a,var(--gold) 50%,var(--gold-d));box-shadow:inset 0 -3px 0 rgba(0,0,0,.15)}
+.status{margin-top:8px;font-size:.85rem;opacity:.7}
+
+/* ---------- navigatie ---------- */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--night);border-top:5px solid transparent;border-image:var(--holo) 1;
+  padding:6px 6px calc(8px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;gap:4px}
+nav.tabs button{flex:1;max-width:180px;border:0;background:transparent;color:#fff;opacity:.65;border-radius:14px;padding:6px 2px;font-weight:700;font-size:.85rem;line-height:1.1}
+nav.tabs button[aria-current="page"]{opacity:1;color:var(--gold)}
+nav.tabs button svg{display:block;margin:0 auto 2px;width:26px;height:26px}
+nav.tabs button.plus svg{background:var(--gold);color:var(--night);border-radius:50%;padding:3px;width:30px;height:30px;margin-top:-2px}
+
+/* ---------- regio-medailles ---------- */
+.regions{display:flex;gap:8px;overflow-x:auto;padding:14px 18px 6px;scrollbar-width:none;scroll-snap-type:x proximity}
+.regions::-webkit-scrollbar{display:none}
+.reg{flex:0 0 auto;scroll-snap-align:start;display:flex;align-items:center;gap:8px;border:3px solid var(--line);background:var(--sleeve);border-radius:16px;padding:6px 12px 6px 8px;text-align:left}
+.reg[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,203,61,.35)}
+.medal{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--disp);font-size:.8rem;color:#fff;background:conic-gradient(var(--mc) calc(var(--p)*1%),var(--line) 0);position:relative}
+.medal::before{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--mi)}
+.medal span{position:relative}
+.reg strong{display:block;font-family:var(--disp);font-weight:400;font-size:1.05rem;line-height:1.1}
+.reg em{font-style:normal;font-size:.85rem;color:var(--soft);font-weight:600}
+
+main{padding:6px 14px 130px}
+.view[hidden]{display:none}
+h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
+.hint{color:var(--soft);margin:0 4px 14px;font-size:1rem;font-weight:600}
+
+/* ---------- verzamelmap ---------- */
+.sheet{background:linear-gradient(180deg,var(--night2),var(--night));border-radius:22px;padding:0 12px 12px;margin-bottom:20px;box-shadow:var(--shadow);overflow:hidden}
+.sheet h3{color:#fff;margin:0 -12px 12px;padding:10px 18px;font-family:var(--disp);font-weight:400;font-size:1.4rem;display:flex;justify-content:space-between;align-items:baseline;
+  background:linear-gradient(90deg,var(--rc),transparent 85%)}
+.sheet h3 span{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:1rem;color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:10px}
+.slot{position:relative;aspect-ratio:63/88;border-radius:11px;border:0;padding:0;text-align:left;overflow:hidden;
+  content-visibility:auto;contain-intrinsic-size:108px 150px;transform:perspective(600px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s ease}
+.slot.back{background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 6px,transparent 6px 12px),radial-gradient(circle at 50% 46%,#3a46a0 0 28%,transparent 29%),var(--empty);
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.12);color:rgba(255,255,255,.55);display:flex;flex-direction:column;justify-content:space-between;padding:7px}
+.slot.back .q{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) rotate(45deg);width:38%;aspect-ratio:1;border-radius:8px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 2px rgba(255,203,61,.45);display:grid;place-items:center}
+.slot.back .q b{transform:rotate(-45deg);font-family:var(--disp);font-weight:400;font-size:1.6rem;color:var(--gold);opacity:.75}
+.slot.back .no{font-weight:700;font-size:.8rem;position:relative}
+.slot.back .nm{font-weight:700;font-size:.85rem;line-height:1.1;position:relative;word-break:break-word}
+.slot.has{background:var(--t1);padding:5px;box-shadow:0 3px 0 rgba(0,0,0,.35);color:#18204a}
+.slot.has .inner{position:absolute;inset:5px;border-radius:7px;overflow:hidden;display:flex;flex-direction:column;background:linear-gradient(170deg,rgba(255,255,255,.92),rgba(255,255,255,.72)),var(--t2)}
+.slot.has .row{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 0;font-weight:800;font-size:.78rem}
+.slot.has .row .ics{display:flex;gap:2px}
+.slot.has .row .ics span{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px}
+.slot.has .art{flex:1;margin:4px 6px;border-radius:5px;display:grid;place-items:center;color:rgba(255,255,255,.95);font-size:2.4rem;background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.35),transparent 60%),linear-gradient(160deg,var(--t1),var(--t2))}
+.slot.has .nm{font-family:var(--disp);font-weight:400;font-size:.98rem;line-height:1.05;padding:0 6px 3px;word-break:break-word}
+.slot.photo{background:#0d1230;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.slot.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.slot .tags{position:absolute;left:8px;right:8px;top:28px;display:flex;flex-wrap:wrap;gap:3px;pointer-events:none}
+.slot.photo .tags{top:6px;left:6px}
+.tag{font-size:.7rem;font-weight:800;padding:0 6px;border-radius:6px;background:#18204a;color:#fff;line-height:1.55;box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.tag.ir{background:linear-gradient(135deg,#ffe27a,#f2a900);color:#18204a}
+.tag.sir{background:linear-gradient(135deg,#ff8fd0,#b48cff,#7af0ff);color:#18204a}
+.tag.cnt{position:absolute;right:6px;bottom:6px;background:var(--gold);color:#18204a}
+.slot.shine::after{content:"";position:absolute;inset:0;background:var(--holo);background-size:250% 250%;mix-blend-mode:soft-light;opacity:.55;animation:foil 4s linear infinite;pointer-events:none}
+@keyframes foil{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.slot.pop{animation:pop .6s ease}
+@keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.12) rotate(-2deg)}100%{transform:scale(1)}}
+
+/* ---------- zoeken ---------- */
+.search{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;padding:12px 0;background:linear-gradient(180deg,var(--page) 70%,transparent)}
+.search input{width:100%;font-size:1.5rem;font-weight:700;padding:14px 18px;border-radius:18px;border:4px solid var(--night2);background:var(--sleeve);box-shadow:var(--shadow)}
+.search input:focus{border-color:var(--gold);outline:none}
+.results{display:grid;gap:8px}
+.res{display:flex;align-items:center;gap:12px;border:0;border-radius:16px;padding:10px 14px;background:var(--sleeve);box-shadow:var(--shadow);text-align:left;font-family:var(--disp);font-size:1.35rem}
+.res .dot{width:42px;height:42px;border-radius:12px;flex:0 0 auto;display:grid;place-items:center;color:#fff;font-size:1.4rem;background:linear-gradient(160deg,var(--t1),var(--t2))}
+.res small{font-family:"Baloo 2",sans-serif;font-size:.9rem;color:var(--soft);font-weight:700;margin-left:auto;text-align:right}
+.res .own{font-size:.8rem;background:var(--ok);color:#fff;border-radius:8px;padding:0 8px;font-family:"Baloo 2",sans-serif;font-weight:800}
+.empty{padding:28px 10px;text-align:center;color:var(--soft);font-weight:700}
+
+/* ---------- paneel ---------- */
+.scrim{position:fixed;inset:0;background:rgba(8,11,32,.6);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.scrim[hidden]{display:none}
+.panel{background:var(--page);width:100%;max-width:640px;max-height:94%;overflow:auto;overscroll-behavior:contain;border-radius:24px 24px 0 0;padding:0 18px calc(22px + env(safe-area-inset-bottom,0px));animation:up .25s ease}
+@keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+.phead{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;margin:0 -18px 6px;padding:14px 18px;color:#fff;background:linear-gradient(160deg,var(--t1),var(--t2));border-radius:24px 24px 0 0}
+.phead .badge{width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.22);display:grid;place-items:center;font-size:1.9rem;flex:0 0 auto}
+.phead h3{margin:0;font-family:var(--disp);font-weight:400;font-size:1.85rem;line-height:1.05;text-shadow:0 2px 0 rgba(0,0,0,.25)}
+.phead p{margin:0;font-size:.95rem;font-weight:700;opacity:.92}
+.close{margin-left:auto;border:0;background:rgba(255,255,255,.22);color:#fff;border-radius:12px;width:44px;height:44px;font-size:1.4rem;font-weight:800;flex:0 0 auto}
+.pcols{display:block}
+.label{font-family:var(--disp);font-size:1.15rem;margin:16px 2px 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:3px solid var(--line);background:var(--sleeve);border-radius:14px;padding:7px 14px;font-weight:800;font-size:1.1rem;min-width:56px}
+.chip[aria-pressed="true"]{border-color:var(--gold-d);background:var(--gold);color:#18204a;box-shadow:0 3px 0 var(--gold-d)}
+.chip.holo[aria-pressed="true"]{background:var(--holo);border-color:#b48cff;box-shadow:0 3px 0 #8a6ad6}
+.chip.add{border-style:dashed;color:var(--soft)}
+.newrow{display:flex;gap:8px;margin-top:10px}
+.newin{flex:1;min-width:0;font-size:1.15rem;font-weight:700;padding:8px 14px;border-radius:14px;border:3px solid var(--line);background:var(--sleeve)}
+.big{width:100%;margin-top:20px;border:0;border-radius:18px;padding:15px;font-family:var(--disp);font-size:1.55rem;background:var(--ok);color:#fff;box-shadow:0 5px 0 var(--ok-d)}
+.big:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ok-d)}
+.big.alt{background:var(--night2);box-shadow:0 5px 0 var(--night)}
+.big.ghost{background:transparent;color:var(--soft);box-shadow:inset 0 0 0 3px var(--line);font-size:1.2rem}
+.cardsbox .meta{display:flex;justify-content:space-between;align-items:baseline;gap:10px;color:var(--soft);font-weight:700;font-size:.95rem;margin:0 2px 8px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;max-height:42vh;overflow:auto;overscroll-behavior:contain;padding:6px;border-radius:14px;background:var(--sleeve);box-shadow:inset 0 0 0 2px var(--line)}
+.cpick{border:0;padding:0;background:var(--empty);border-radius:8px;aspect-ratio:63/88;overflow:hidden;position:relative}
+.cpick img{width:100%;height:100%;object-fit:cover;display:block}
+.cpick .noimg{position:absolute;inset:0;display:grid;place-items:center;padding:6px;color:#fff;font-size:.8rem;font-weight:700;text-align:center}
+.cpick[aria-pressed="true"]{box-shadow:0 0 0 4px var(--gold),0 0 0 7px var(--night2)}
+.cpick[aria-pressed="true"]::after{content:"✓";position:absolute;right:4px;top:4px;width:26px;height:26px;border-radius:50%;background:var(--gold);color:#18204a;font-weight:800;display:grid;place-items:center}
+.cpick.mine::before{content:"heb ik";position:absolute;left:4px;bottom:4px;z-index:1;background:var(--ok);color:#fff;font-size:.7rem;font-weight:800;border-radius:6px;padding:0 6px}
+.cinfo{margin-top:8px;padding:8px 12px;border-radius:12px;background:var(--sleeve);font-weight:700;font-size:.95rem;color:var(--soft)}
+.cinfo b{color:var(--ink)}
+.loading,.cerr{padding:18px 10px;text-align:center;color:var(--soft);font-weight:700;background:var(--sleeve);border-radius:14px}
+.owned{margin-top:4px;display:grid;gap:6px}
+.own{display:flex;align-items:center;gap:10px;background:var(--sleeve);border-radius:12px;padding:8px 10px;box-shadow:var(--shadow)}
+.own .thumb{width:40px;aspect-ratio:63/88;border-radius:4px;object-fit:cover;flex:0 0 auto;background:var(--empty)}
+.own .what{font-weight:800;line-height:1.2;min-width:0}
+.own .what small{display:block;color:var(--soft);font-weight:600;font-size:.82rem}
+.own .n{margin-left:auto;font-family:var(--disp);font-size:1.4rem;min-width:2ch;text-align:center}
+.step{border:0;width:40px;height:40px;border-radius:10px;background:var(--page);font-size:1.4rem;font-weight:800;box-shadow:inset 0 0 0 2px var(--line);flex:0 0 auto}
+.cover{border:0;background:transparent;font-size:1.35rem;width:36px;height:40px;color:var(--soft);flex:0 0 auto}
+.cover[aria-pressed="true"]{color:var(--gold-d)}
+.field{width:100%;font-size:1.3rem;font-weight:700;padding:12px 14px;border-radius:14px;border:3px solid var(--line);background:var(--sleeve)}
+.field:focus{border-color:var(--gold);outline:none}
+.bk p{margin:10px 2px 0;color:var(--soft);font-weight:600}
+
+/* ---------- ruilen ---------- */
+.dup{display:flex;align-items:center;gap:12px;background:var(--sleeve);border-radius:16px;padding:10px 14px;margin-bottom:8px;box-shadow:var(--shadow);border:0;width:100%;text-align:left}
+.dup .sw{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:1.5rem;background:linear-gradient(160deg,var(--t1),var(--t2));flex:0 0 auto;overflow:hidden}
+.dup .sw img{width:100%;height:100%;object-fit:cover}
+.dup .nm{font-family:var(--disp);font-size:1.25rem}
+.dup .sub{font-size:.9rem;color:var(--soft);font-weight:600}
+.dup .x{margin-left:auto;font-family:var(--disp);font-size:1.2rem;background:var(--gold);color:#18204a;border-radius:12px;padding:2px 10px;white-space:nowrap}
+.duplist{display:grid;gap:0}
+
+/* ---------- overzicht ---------- */
+.stats{display:grid;gap:14px;grid-template-columns:1fr}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kpi{background:var(--sleeve);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow)}
+.kpi b{display:block;font-family:var(--disp);font-weight:400;font-size:2.2rem;line-height:1;color:var(--night2)}
+:root[data-theme="dark"] .kpi b{color:var(--gold)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kpi b{color:var(--gold)}}
+.kpi span{font-weight:700;color:var(--soft);font-size:.95rem}
+.card{background:var(--sleeve);border-radius:20px;padding:14px 16px;box-shadow:var(--shadow)}
+.card h4{margin:0 0 4px;font-family:var(--disp);font-weight:400;font-size:1.3rem}
+.card .top1{margin:0 0 10px;font-weight:700;color:var(--soft)}
+.brow{display:grid;grid-template-columns:minmax(90px,150px) 1fr 3.2em;align-items:center;gap:10px;margin:6px 0}
+.brow .lab{display:flex;align-items:center;gap:6px;font-weight:800;font-size:.98rem;min-width:0}
+.brow .lab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brow .lab .ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:13px;flex:0 0 auto}
+.brow .tr{height:16px;border-radius:8px;background:var(--page);overflow:hidden}
+.brow .tr i{display:block;height:100%;border-radius:8px;background:var(--bc,var(--night2));transition:width .6s ease}
+.brow .v{font-family:var(--disp);text-align:right}
+.note{font-size:.9rem;color:var(--soft);font-weight:600;margin:8px 0 0}
+
+/* ---------- melding + onthulling ---------- */
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;z-index:30;pointer-events:none;
+  background:var(--night);color:#fff;padding:10px 14px 10px 18px;border-radius:14px;font-weight:700;display:flex;gap:12px;align-items:center;transition:all .25s ease;width:max-content;max-width:min(92vw,520px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.toast button{border:0;background:var(--gold);color:#18204a;border-radius:10px;padding:4px 10px;font-weight:800}
+.reveal{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:rgba(8,11,32,.84);perspective:900px}
+.reveal[hidden]{display:none}
+.rays{position:absolute;width:160vmax;height:160vmax;left:50%;top:50%;margin:-80vmax 0 0 -80vmax;background:repeating-conic-gradient(rgba(255,203,61,.18) 0 8deg,transparent 8deg 20deg);animation:spin 14s linear infinite;
+  -webkit-mask:radial-gradient(circle,#000 0 30%,transparent 60%);mask:radial-gradient(circle,#000 0 30%,transparent 60%)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rstack{position:relative;display:flex;flex-direction:column;align-items:center;gap:20px;padding:20px}
+.rcard{position:relative;width:min(62vw,270px);aspect-ratio:63/88;transform-style:preserve-3d;animation:flip 1s cubic-bezier(.3,1.3,.5,1) .15s both}
+@keyframes flip{0%{transform:rotateY(180deg) scale(.6)}100%{transform:rotateY(0) scale(1)}}
+.rcard .face,.rcard .rback{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.rcard .rback{transform:rotateY(180deg);background:repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 8px,transparent 8px 16px),radial-gradient(circle,#3a46a0 0 30%,transparent 31%),var(--empty);box-shadow:inset 0 0 0 6px rgba(255,203,61,.6)}
+.rcard .face{background:var(--t1);padding:8px;box-shadow:0 0 0 4px rgba(255,255,255,.5),0 20px 60px rgba(0,0,0,.5);overflow:hidden}
+.rcard .face.img{background:transparent;padding:0}
+.rcard .face.img img{width:100%;height:100%;object-fit:contain;border-radius:14px;display:block}
+.rcard .fi{height:100%;border-radius:10px;display:flex;flex-direction:column;background:linear-gradient(170deg,#fff,rgba(255,255,255,.75)),var(--t2);color:#18204a;overflow:hidden}
+.rcard .fi .row{display:flex;justify-content:space-between;padding:8px 10px 0;font-weight:800}
+.rcard .fi .art{flex:1;margin:8px 10px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:5rem;background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.4),transparent 60%),linear-gradient(160deg,var(--t1),var(--t2))}
+.rcard .fi .nm{font-family:var(--disp);font-size:1.7rem;padding:0 10px 10px;line-height:1}
+.rcard.shine .face::after{content:"";position:absolute;inset:0;border-radius:16px;background:var(--holo);background-size:250% 250%;mix-blend-mode:soft-light;opacity:.7;animation:foil 3s linear infinite}
+.rtext{text-align:center;font-family:var(--disp);font-size:2.2rem;line-height:1.05;color:var(--gold);text-shadow:0 3px 0 var(--gold-d);animation:drop .5s .6s both;max-width:90vw}
+.rsub{text-align:center;color:#fff;font-weight:700;animation:drop .5s .9s both}
+@keyframes drop{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall 2.4s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+/* ---------- mobiel ---------- */
+@media (max-width:440px){
+  .grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .count b{font-size:3.3rem}
+  .rank{margin-left:0;text-align:left;width:100%}
+  .slot.has .art{font-size:1.8rem}
+  .iconbtn .lbl{display:none}
+  main{padding-left:10px;padding-right:10px}
+  .sheet{padding:0 8px 8px}
+}
+/* ---------- desktop ---------- */
+@media (min-width:900px){
+  body{font-size:17px}
+  nav.tabs{position:sticky;top:0;bottom:auto;border-top:0;border-bottom:5px solid transparent;padding:8px 18px;justify-content:center;gap:8px}
+  nav.tabs button{display:flex;align-items:center;gap:8px;font-size:1.05rem;padding:8px 18px;max-width:none;flex:0 0 auto}
+  nav.tabs button svg{margin:0;width:22px;height:22px}
+  nav.tabs button.plus svg{width:26px;height:26px;margin:0}
+  nav.tabs button[aria-current="page"]{background:rgba(255,255,255,.12)}
+  main{padding:10px 24px 60px}
+  .regions{padding:16px 24px 6px;flex-wrap:wrap;overflow:visible}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:12px}
+  .slot.has .art{font-size:2.8rem}
+  .search{top:72px}
+  .results{grid-template-columns:repeat(2,1fr)}
+  .scrim{align-items:center;padding:24px}
+  .panel{max-width:1020px;max-height:90vh;border-radius:24px}
+  .pcols{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;align-items:start}
+  .cgrid{max-height:62vh;grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+  .toast{bottom:28px}
+  .stats{grid-template-columns:1fr 1fr}
+  .stats .kpis{grid-column:1/-1}
+}
+@media (hover:hover){.slot:hover{z-index:2}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.slot{transform:none!important}}
+</style>
+</head>
+<body>
+<div class="gate" id="gate" hidden>
+  <form id="loginForm" autocomplete="on">
+    <h1>Verzamelboek</h1>
+    <p>Log in om je boek te openen.</p>
+    <label for="lu">Gebruikersnaam</label>
+    <input type="text" id="lu" name="username" autocomplete="username" autocapitalize="off" spellcheck="false" required>
+    <label for="lp">Wachtwoord</label>
+    <input type="password" id="lp" name="password" autocomplete="current-password" required>
+    <label class="rem"><input type="checkbox" id="lr" checked> Onthoud mij op dit apparaat</label>
+    <p class="err" id="lerr" role="alert"></p>
+    <button class="big press" type="submit">Open mijn boek</button>
+  </form>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <div class="top-row">
+      <p class="title"><svg viewBox="0 0 24 24" class="ti"><path d="M12 2c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10z"/></svg><span id="title">Verzamelboek</span></p>
+      <div class="hbtns">
+        <button class="iconbtn press" id="setBtn" aria-label="Instellingen"><svg viewBox="0 0 24 24" class="ti"><path fill-rule="evenodd" d="M10.3 2h3.4l.5 2.6 2 .9 2.2-1.5 2.4 2.4-1.5 2.2.9 2 2.6.5v3.4l-2.6.5-.9 2 1.5 2.2-2.4 2.4-2.2-1.5-2 .9-.5 2.6h-3.4l-.5-2.6-2-.9-2.2 1.5-2.4-2.4 1.5-2.2-.9-2L2 13.7v-3.4l2.6-.5.9-2L4 5.6 6.4 3.2l2.2 1.5 2-.9zM12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"/></svg><span class="lbl">Instellingen</span></button>
+        <button class="iconbtn press" id="themeBtn" aria-label="Licht of donker">◐</button>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="count"><b id="cnt">0</b><span>van 1025 Pokémon</span></div>
+      <div class="rank"><strong id="rankName">Beginnende verzamelaar</strong><small id="rankNext"></small></div>
+    </div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="1025" id="barWrap"><i id="bar"></i></div>
+    <p class="status" id="status"></p>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Schermen">
+  <button data-v="boek" aria-current="page"><svg viewBox="0 0 24 24" class="ti"><path d="M4 4a2 2 0 0 1 2-2h13v18H6a2 2 0 0 0-2 2zm2 15h13M8 6h8v3H8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Boek</button>
+  <button data-v="mis"><svg viewBox="0 0 24 24" class="ti"><path d="M12 2l10 10-10 10L2 12z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 9.5a2 2 0 1 1 2.8 1.8c-.6.3-.8.8-.8 1.4M12 15.5v.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Mis ik nog</button>
+  <button data-v="erbij" class="plus"><svg viewBox="0 0 24 24" class="ti"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>Erbij</button>
+  <button data-v="dub"><svg viewBox="0 0 24 24" class="ti"><path d="M4 9h13l-3-3M20 15H7l3 3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Ruilen</button>
+  <button data-v="stat"><svg viewBox="0 0 24 24" class="ti"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Overzicht</button>
+</nav>
+
+<div class="wrap">
+  <div class="regions" id="regions" role="group" aria-label="Kies een regio"></div>
+  <main>
+    <section class="view" id="v-boek"></section>
+    <section class="view" id="v-erbij" hidden>
+      <div class="search"><input id="q" type="search" placeholder="Typ een naam of nummer…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Zoek een Pokémon" enterkeyhint="search"></div>
+      <div class="results" id="results"></div>
+    </section>
+    <section class="view" id="v-mis" hidden></section>
+    <section class="view" id="v-dub" hidden></section>
+    <section class="view" id="v-stat" hidden></section>
+  </main>
+</div>
+
+<div class="scrim" id="scrim" hidden><div class="panel" id="panel" role="dialog" aria-modal="true"></div></div>
+<input type="file" id="importFile" accept=".json,application/json" hidden>
+<div class="reveal" id="reveal" hidden aria-live="polite"></div>
+<div class="toast" id="toast" role="status"><span id="toastMsg"></span><button id="undo">Terug</button></div>
+<script>
+"use strict";
+const DEX = [["Bulbasaur","Bisasam","Bulbizarre",1,["grass","poison"]],["Ivysaur","Bisaknosp","Herbizarre",1,["grass","poison"]],["Venusaur","Bisaflor","Florizarre",1,["grass","poison"]],["Charmander","Glumanda","Salamèche",1,["fire"]],["Charmeleon","Glutexo","Reptincel",1,["fire"]],["Charizard","Glurak","Dracaufeu",1,["fire","flying"]],["Squirtle","Schiggy","Carapuce",1,["water"]],["Wartortle","Schillok","Carabaffe",1,["water"]],["Blastoise","Turtok","Tortank",1,["water"]],["Caterpie","Raupy","Chenipan",1,["bug"]],["Metapod","Safcon","Chrysacier",1,["bug"]],["Butterfree","Smettbo","Papilusion",1,["bug","flying"]],["Weedle","Hornliu","Aspicot",1,["bug","poison"]],["Kakuna","Kokuna","Coconfort",1,["bug","poison"]],["Beedrill","Bibor","Dardargnan",1,["bug","poison"]],["Pidgey","Taubsi","Roucool",1,["normal","flying"]],["Pidgeotto","Tauboga","Roucoups",1,["normal","flying"]],["Pidgeot","Tauboss","Roucarnage",1,["normal","flying"]],["Rattata","Rattfratz",0,1,["normal"]],["Raticate","Rattikarl","Rattatac",1,["normal"]],["Spearow","Habitak","Piafabec",1,["normal","flying"]],["Fearow","Ibitak","Rapasdepic",1,["normal","flying"]],["Ekans","Rettan","Abo",1,["poison"]],["Arbok",0,0,1,["poison"]],["Pikachu",0,0,1,["electric"]],["Raichu",0,0,1,["electric"]],["Sandshrew","Sandan","Sabelette",1,["ground"]],["Sandslash","Sandamer","Sablaireau",1,["ground"]],["Nidoran♀",0,0,1,["poison"]],["Nidorina",0,0,1,["poison"]],["Nidoqueen",0,0,1,["poison","ground"]],["Nidoran♂",0,0,1,["poison"]],["Nidorino",0,0,1,["poison"]],["Nidoking",0,0,1,["poison","ground"]],["Clefairy","Piepi","Mélofée",1,["fairy"]],["Clefable","Pixi","Mélodelfe",1,["fairy"]],["Vulpix",0,"Goupix",1,["fire"]],["Ninetales","Vulnona","Feunard",1,["fire"]],["Jigglypuff","Pummeluff","Rondoudou",1,["normal","fairy"]],["Wigglytuff","Knuddeluff","Grodoudou",1,["normal","fairy"]],["Zubat",0,"Nosferapti",1,["poison","flying"]],["Golbat",0,"Nosferalto",1,["poison","flying"]],["Oddish","Myrapla","Mystherbe",1,["grass","poison"]],["Gloom","Duflor","Ortide",1,["grass","poison"]],["Vileplume","Giflor","Rafflesia",1,["grass","poison"]],["Paras",0,0,1,["bug","grass"]],["Parasect","Parasek",0,1,["bug","grass"]],["Venonat","Bluzuk","Mimitoss",1,["bug","poison"]],["Venomoth","Omot","Aéromite",1,["bug","poison"]],["Diglett","Digda","Taupiqueur",1,["ground"]],["Dugtrio","Digdri","Triopikeur",1,["ground"]],["Meowth","Mauzi","Miaouss",1,["normal"]],["Persian","Snobilikat",0,1,["normal"]],["Psyduck","Enton","Psykokwak",1,["water"]],["Golduck","Entoron","Akwakwak",1,["water"]],["Mankey","Menki","Férosinge",1,["fighting"]],["Primeape","Rasaff","Colossinge",1,["fighting"]],["Growlithe","Fukano","Caninos",1,["fire"]],["Arcanine","Arkani","Arcanin",1,["fire"]],["Poliwag","Quapsel","Ptitard",1,["water"]],["Poliwhirl","Quaputzi","Têtarte",1,["water"]],["Poliwrath","Quappo","Tartard",1,["water","fighting"]],["Abra",0,0,1,["psychic"]],["Kadabra",0,0,1,["psychic"]],["Alakazam","Simsala",0,1,["psychic"]],["Machop","Machollo","Machoc",1,["fighting"]],["Machoke","Maschock","Machopeur",1,["fighting"]],["Machamp","Machomei","Mackogneur",1,["fighting"]],["Bellsprout","Knofensa","Chétiflor",1,["grass","poison"]],["Weepinbell","Ultrigaria","Boustiflor",1,["grass","poison"]],["Victreebel","Sarzenia","Empiflor",1,["grass","poison"]],["Tentacool","Tentacha",0,1,["water","poison"]],["Tentacruel","Tentoxa",0,1,["water","poison"]],["Geodude","Kleinstein","Racaillou",1,["rock","ground"]],["Graveler","Georok","Gravalanch",1,["rock","ground"]],["Golem","Geowaz","Grolem",1,["rock","ground"]],["Ponyta","Ponita",0,1,["fire"]],["Rapidash","Gallopa","Galopa",1,["fire"]],["Slowpoke","Flegmon","Ramoloss",1,["water","psychic"]],["Slowbro","Lahmus","Flagadoss",1,["water","psychic"]],["Magnemite","Magnetilo","Magnéti",1,["electric","steel"]],["Magneton",0,"Magnéton",1,["electric","steel"]],["Farfetch’d","Porenta","Canarticho",1,["normal","flying"]],["Doduo","Dodu",0,1,["normal","flying"]],["Dodrio","Dodri",0,1,["normal","flying"]],["Seel","Jurob","Otaria",1,["water"]],["Dewgong","Jugong","Lamantine",1,["water","ice"]],["Grimer","Sleima","Tadmorv",1,["poison"]],["Muk","Sleimok","Grotadmorv",1,["poison"]],["Shellder","Muschas","Kokiyas",1,["water"]],["Cloyster","Austos","Crustabri",1,["water","ice"]],["Gastly","Nebulak","Fantominus",1,["ghost","poison"]],["Haunter","Alpollo","Spectrum",1,["ghost","poison"]],["Gengar",0,"Ectoplasma",1,["ghost","poison"]],["Onix",0,0,1,["rock","ground"]],["Drowzee","Traumato","Soporifik",1,["psychic"]],["Hypno",0,"Hypnomade",1,["psychic"]],["Krabby",0,0,1,["water"]],["Kingler",0,"Krabboss",1,["water"]],["Voltorb","Voltobal","Voltorbe",1,["electric"]],["Electrode","Lektrobal","Électrode",1,["electric"]],["Exeggcute","Owei","Noeunoeuf",1,["grass","psychic"]],["Exeggutor","Kokowei","Noadkoko",1,["grass","psychic"]],["Cubone","Tragosso","Osselait",1,["ground"]],["Marowak","Knogga","Ossatueur",1,["ground"]],["Hitmonlee","Kicklee","Kicklee",1,["fighting"]],["Hitmonchan","Nockchan","Tygnon",1,["fighting"]],["Lickitung","Schlurp","Excelangue",1,["normal"]],["Koffing","Smogon","Smogo",1,["poison"]],["Weezing","Smogmog","Smogogo",1,["poison"]],["Rhyhorn","Rihorn","Rhinocorne",1,["ground","rock"]],["Rhydon","Rizeros","Rhinoféros",1,["ground","rock"]],["Chansey","Chaneira","Leveinard",1,["normal"]],["Tangela",0,"Saquedeneu",1,["grass"]],["Kangaskhan","Kangama","Kangourex",1,["normal"]],["Horsea","Seeper","Hypotrempe",1,["water"]],["Seadra","Seemon","Hypocéan",1,["water"]],["Goldeen","Goldini","Poissirène",1,["water"]],["Seaking","Golking","Poissoroy",1,["water"]],["Staryu","Sterndu","Stari",1,["water"]],["Starmie",0,"Staross",1,["water","psychic"]],["Mr. Mime","Pantimos","M. Mime",1,["psychic","fairy"]],["Scyther","Sichlor","Insécateur",1,["bug","flying"]],["Jynx","Rossana","Lippoutou",1,["ice","psychic"]],["Electabuzz","Elektek","Élektek",1,["electric"]],["Magmar",0,0,1,["fire"]],["Pinsir",0,"Scarabrute",1,["bug"]],["Tauros",0,0,1,["normal"]],["Magikarp","Karpador","Magicarpe",1,["water"]],["Gyarados","Garados","Léviator",1,["water","flying"]],["Lapras",0,"Lokhlass",1,["water","ice"]],["Ditto",0,"Métamorph",1,["normal"]],["Eevee","Evoli","Évoli",1,["normal"]],["Vaporeon","Aquana","Aquali",1,["water"]],["Jolteon","Blitza","Voltali",1,["electric"]],["Flareon","Flamara","Pyroli",1,["fire"]],["Porygon",0,0,1,["normal"]],["Omanyte","Amonitas","Amonita",1,["rock","water"]],["Omastar","Amoroso","Amonistar",1,["rock","water"]],["Kabuto",0,0,1,["rock","water"]],["Kabutops",0,0,1,["rock","water"]],["Aerodactyl",0,"Ptéra",1,["rock","flying"]],["Snorlax","Relaxo","Ronflex",1,["normal"]],["Articuno","Arktos","Artikodin",1,["ice","flying"]],["Zapdos",0,"Électhor",1,["electric","flying"]],["Moltres","Lavados","Sulfura",1,["fire","flying"]],["Dratini",0,"Minidraco",1,["dragon"]],["Dragonair","Dragonir","Draco",1,["dragon"]],["Dragonite","Dragoran","Dracolosse",1,["dragon","flying"]],["Mewtwo","Mewtu",0,1,["psychic"]],["Mew",0,0,1,["psychic"]],["Chikorita","Endivie","Germignon",2,["grass"]],["Bayleef","Lorblatt","Macronium",2,["grass"]],["Meganium","Meganie","Méganium",2,["grass"]],["Cyndaquil","Feurigel","Héricendre",2,["fire"]],["Quilava","Igelavar","Feurisson",2,["fire"]],["Typhlosion","Tornupto",0,2,["fire"]],["Totodile","Karnimani","Kaiminus",2,["water"]],["Croconaw","Tyracroc","Crocrodil",2,["water"]],["Feraligatr","Impergator","Aligatueur",2,["water"]],["Sentret","Wiesor","Fouinette",2,["normal"]],["Furret","Wiesenior","Fouinar",2,["normal"]],["Hoothoot",0,0,2,["normal","flying"]],["Noctowl","Noctuh","Noarfang",2,["normal","flying"]],["Ledyba",0,"Coxy",2,["bug","flying"]],["Ledian",0,"Coxyclaque",2,["bug","flying"]],["Spinarak","Webarak","Mimigal",2,["bug","poison"]],["Ariados",0,"Migalos",2,["bug","poison"]],["Crobat","Iksbat","Nostenfer",2,["poison","flying"]],["Chinchou","Lampi","Loupio",2,["water","electric"]],["Lanturn",0,0,2,["water","electric"]],["Pichu",0,0,2,["electric"]],["Cleffa","Pii","Mélo",2,["fairy"]],["Igglybuff","Fluffeluff","Toudoudou",2,["normal","fairy"]],["Togepi",0,0,2,["fairy"]],["Togetic",0,0,2,["fairy","flying"]],["Natu",0,0,2,["psychic","flying"]],["Xatu",0,0,2,["psychic","flying"]],["Mareep","Voltilamm","Wattouat",2,["electric"]],["Flaaffy","Waaty","Lainergie",2,["electric"]],["Ampharos",0,"Pharamp",2,["electric"]],["Bellossom","Blubella","Joliflor",2,["grass"]],["Marill",0,0,2,["water","fairy"]],["Azumarill",0,0,2,["water","fairy"]],["Sudowoodo","Mogelbaum","Simularbre",2,["rock"]],["Politoed","Quaxo","Tarpaud",2,["water"]],["Hoppip","Hoppspross","Granivol",2,["grass","flying"]],["Skiploom","Hubelupf","Floravol",2,["grass","flying"]],["Jumpluff","Papungha","Cotovol",2,["grass","flying"]],["Aipom","Griffel","Capumain",2,["normal"]],["Sunkern","Sonnkern","Tournegrin",2,["grass"]],["Sunflora","Sonnflora","Héliatronc",2,["grass"]],["Yanma",0,0,2,["bug","flying"]],["Wooper","Felino","Axoloto",2,["water","ground"]],["Quagsire","Morlord","Maraiste",2,["water","ground"]],["Espeon","Psiana","Mentali",2,["psychic"]],["Umbreon","Nachtara","Noctali",2,["dark"]],["Murkrow","Kramurx","Cornèbre",2,["dark","flying"]],["Slowking","Laschoking","Roigada",2,["water","psychic"]],["Misdreavus","Traunfugil","Feuforêve",2,["ghost"]],["Unown","Icognito","Zarbi",2,["psychic"]],["Wobbuffet","Woingenau","Qulbutoké",2,["psychic"]],["Girafarig",0,0,2,["normal","psychic"]],["Pineco","Tannza","Pomdepik",2,["bug"]],["Forretress","Forstellka","Foretress",2,["bug","steel"]],["Dunsparce","Dummisel","Insolourdo",2,["normal"]],["Gligar","Skorgla","Scorplane",2,["ground","flying"]],["Steelix","Stahlos",0,2,["steel","ground"]],["Snubbull",0,0,2,["fairy"]],["Granbull",0,0,2,["fairy"]],["Qwilfish","Baldorfish",0,2,["water","poison"]],["Scizor","Scherox","Cizayox",2,["bug","steel"]],["Shuckle","Pottrott","Caratroc",2,["bug","rock"]],["Heracross","Skaraborn","Scarhino",2,["bug","fighting"]],["Sneasel","Sniebel","Farfuret",2,["dark","ice"]],["Teddiursa",0,0,2,["normal"]],["Ursaring",0,0,2,["normal"]],["Slugma","Schneckmag","Limagma",2,["fire"]],["Magcargo",0,"Volcaropod",2,["fire","rock"]],["Swinub","Quiekel","Marcacrin",2,["ice","ground"]],["Piloswine","Keifel","Cochignon",2,["ice","ground"]],["Corsola","Corasonn","Corayon",2,["water","rock"]],["Remoraid",0,"Rémoraid",2,["water"]],["Octillery",0,0,2,["water"]],["Delibird","Botogel","Cadoizo",2,["ice","flying"]],["Mantine","Mantax","Démanta",2,["water","flying"]],["Skarmory","Panzaeron","Airmure",2,["steel","flying"]],["Houndour","Hunduster","Malosse",2,["dark","fire"]],["Houndoom","Hundemon","Démolosse",2,["dark","fire"]],["Kingdra","Seedraking","Hyporoi",2,["water","dragon"]],["Phanpy",0,0,2,["ground"]],["Donphan",0,0,2,["ground"]],["Porygon2",0,0,2,["normal"]],["Stantler","Damhirplex","Cerfrousse",2,["normal"]],["Smeargle","Farbeagle","Queulorior",2,["normal"]],["Tyrogue","Rabauz","Debugant",2,["fighting"]],["Hitmontop","Kapoera","Kapoera",2,["fighting"]],["Smoochum","Kussilla","Lippouti",2,["ice","psychic"]],["Elekid",0,"Élekid",2,["electric"]],["Magby",0,0,2,["fire"]],["Miltank",0,"Écrémeuh",2,["normal"]],["Blissey","Heiteira","Leuphorie",2,["normal"]],["Raikou",0,0,2,["electric"]],["Entei",0,0,2,["fire"]],["Suicune",0,0,2,["water"]],["Larvitar",0,"Embrylex",2,["rock","ground"]],["Pupitar",0,"Ymphect",2,["rock","ground"]],["Tyranitar","Despotar","Tyranocif",2,["rock","dark"]],["Lugia",0,0,2,["psychic","flying"]],["Ho-Oh",0,0,2,["fire","flying"]],["Celebi",0,0,2,["psychic","grass"]],["Treecko","Geckarbor","Arcko",3,["grass"]],["Grovyle","Reptain","Massko",3,["grass"]],["Sceptile","Gewaldro","Jungko",3,["grass"]],["Torchic","Flemmli","Poussifeu",3,["fire"]],["Combusken","Jungglut","Galifeu",3,["fire","fighting"]],["Blaziken","Lohgock","Braségali",3,["fire","fighting"]],["Mudkip","Hydropi","Gobou",3,["water"]],["Marshtomp","Moorabbel","Flobio",3,["water","ground"]],["Swampert","Sumpex","Laggron",3,["water","ground"]],["Poochyena","Fiffyen","Medhyèna",3,["dark"]],["Mightyena","Magnayen","Grahyèna",3,["dark"]],["Zigzagoon","Zigzachs","Zigzaton",3,["normal"]],["Linoone","Geradaks","Linéon",3,["normal"]],["Wurmple","Waumpel","Chenipotte",3,["bug"]],["Silcoon","Schaloko","Armulys",3,["bug"]],["Beautifly","Papinella","Charmillon",3,["bug","flying"]],["Cascoon","Panekon","Blindalys",3,["bug"]],["Dustox","Pudox","Papinox",3,["bug","poison"]],["Lotad","Loturzel","Nénupiot",3,["water","grass"]],["Lombre","Lombrero",0,3,["water","grass"]],["Ludicolo","Kappalores",0,3,["water","grass"]],["Seedot","Samurzel","Grainipiot",3,["grass"]],["Nuzleaf","Blanas","Pifeuil",3,["grass","dark"]],["Shiftry","Tengulist","Tengalice",3,["grass","dark"]],["Taillow","Schwalbini","Nirondelle",3,["normal","flying"]],["Swellow","Schwalboss","Hélédelle",3,["normal","flying"]],["Wingull",0,"Goélise",3,["water","flying"]],["Pelipper",0,"Bekipan",3,["water","flying"]],["Ralts","Trasla","Tarsal",3,["psychic","fairy"]],["Kirlia",0,0,3,["psychic","fairy"]],["Gardevoir","Guardevoir",0,3,["psychic","fairy"]],["Surskit","Gehweiher","Arakdo",3,["bug","water"]],["Masquerain","Maskeregen","Maskadra",3,["bug","flying"]],["Shroomish","Knilz","Balignon",3,["grass"]],["Breloom","Kapilz","Chapignon",3,["grass","fighting"]],["Slakoth","Bummelz","Parecool",3,["normal"]],["Vigoroth","Muntier",0,3,["normal"]],["Slaking","Letarking","Monaflèmit",3,["normal"]],["Nincada",0,"Ningale",3,["bug","ground"]],["Ninjask",0,0,3,["bug","flying"]],["Shedinja","Ninjatom","Munja",3,["bug","ghost"]],["Whismur","Flurmel","Chuchmur",3,["normal"]],["Loudred","Krakeelo","Ramboum",3,["normal"]],["Exploud","Krawumms","Brouhabam",3,["normal"]],["Makuhita",0,0,3,["fighting"]],["Hariyama",0,0,3,["fighting"]],["Azurill",0,0,3,["normal","fairy"]],["Nosepass","Nasgnet","Tarinor",3,["rock"]],["Skitty","Eneco",0,3,["normal"]],["Delcatty","Enekoro",0,3,["normal"]],["Sableye","Zobiris","Ténéfix",3,["dark","ghost"]],["Mawile","Flunkifer","Mysdibule",3,["steel","fairy"]],["Aron","Stollunior","Galekid",3,["steel","rock"]],["Lairon","Stollrak","Galegon",3,["steel","rock"]],["Aggron","Stolloss","Galeking",3,["steel","rock"]],["Meditite","Meditie","Méditikka",3,["fighting","psychic"]],["Medicham","Meditalis","Charmina",3,["fighting","psychic"]],["Electrike","Frizelbliz","Dynavolt",3,["electric"]],["Manectric","Voltenso","Élecsprint",3,["electric"]],["Plusle",0,"Posipi",3,["electric"]],["Minun",0,"Négapi",3,["electric"]],["Volbeat",0,"Muciole",3,["bug"]],["Illumise",0,"Lumivole",3,["bug"]],["Roselia",0,"Rosélia",3,["grass","poison"]],["Gulpin","Schluppuck","Gloupti",3,["poison"]],["Swalot","Schlukwech","Avaltout",3,["poison"]],["Carvanha","Kanivanha",0,3,["water","dark"]],["Sharpedo","Tohaido",0,3,["water","dark"]],["Wailmer",0,0,3,["water"]],["Wailord",0,0,3,["water"]],["Numel","Camaub","Chamallot",3,["fire","ground"]],["Camerupt",0,"Camérupt",3,["fire","ground"]],["Torkoal","Qurtel","Chartor",3,["fire"]],["Spoink",0,0,3,["psychic"]],["Grumpig","Groink","Groret",3,["psychic"]],["Spinda","Pandir",0,3,["normal"]],["Trapinch","Knacklion","Kraknoix",3,["ground"]],["Vibrava",0,"Vibraninf",3,["ground","dragon"]],["Flygon","Libelldra","Libégon",3,["ground","dragon"]],["Cacnea","Tuska",0,3,["grass"]],["Cacturne","Noktuska",0,3,["grass","dark"]],["Swablu","Wablu","Tylton",3,["normal","flying"]],["Altaria",0,0,3,["dragon","flying"]],["Zangoose","Sengo","Mangriff",3,["normal"]],["Seviper","Vipitis","Séviper",3,["poison"]],["Lunatone","Lunastein","Séléroc",3,["rock","psychic"]],["Solrock","Sonnfel","Solaroc",3,["rock","psychic"]],["Barboach","Schmerbe","Barloche",3,["water","ground"]],["Whiscash","Welsar","Barbicha",3,["water","ground"]],["Corphish","Krebscorps","Écrapince",3,["water"]],["Crawdaunt","Krebutack","Colhomard",3,["water","dark"]],["Baltoy","Puppance","Balbuto",3,["ground","psychic"]],["Claydol","Lepumentas","Kaorine",3,["ground","psychic"]],["Lileep","Liliep","Lilia",3,["rock","grass"]],["Cradily","Wielie","Vacilys",3,["rock","grass"]],["Anorith",0,0,3,["rock","bug"]],["Armaldo",0,0,3,["rock","bug"]],["Feebas","Barschwa","Barpau",3,["water"]],["Milotic",0,"Milobellus",3,["water"]],["Castform","Formeo","Morphéo",3,["normal"]],["Kecleon",0,0,3,["normal"]],["Shuppet",0,"Polichombr",3,["ghost"]],["Banette",0,"Branette",3,["ghost"]],["Duskull","Zwirrlicht","Skelénox",3,["ghost"]],["Dusclops","Zwirrklop","Téraclope",3,["ghost"]],["Tropius",0,0,3,["grass","flying"]],["Chimecho","Palimpalim","Éoko",3,["psychic"]],["Absol",0,0,3,["dark"]],["Wynaut","Isso","Okéoké",3,["psychic"]],["Snorunt","Schneppke","Stalgamin",3,["ice"]],["Glalie","Firnontor","Oniglali",3,["ice"]],["Spheal","Seemops","Obalie",3,["ice","water"]],["Sealeo","Seejong","Phogleur",3,["ice","water"]],["Walrein","Walraisa","Kaimorse",3,["ice","water"]],["Clamperl","Perlu","Coquiperl",3,["water"]],["Huntail","Aalabyss","Serpang",3,["water"]],["Gorebyss","Saganabyss","Rosabyss",3,["water"]],["Relicanth",0,0,3,["water","rock"]],["Luvdisc","Liebiskus","Lovdisc",3,["water"]],["Bagon","Kindwurm","Draby",3,["dragon"]],["Shelgon","Draschel","Drackhaus",3,["dragon"]],["Salamence","Brutalanda","Drattak",3,["dragon","flying"]],["Beldum","Tanhel","Terhal",3,["steel","psychic"]],["Metang",0,"Métang",3,["steel","psychic"]],["Metagross",0,"Métalosse",3,["steel","psychic"]],["Regirock",0,0,3,["rock"]],["Regice",0,0,3,["ice"]],["Registeel",0,0,3,["steel"]],["Latias",0,0,3,["dragon","psychic"]],["Latios",0,0,3,["dragon","psychic"]],["Kyogre",0,0,3,["water"]],["Groudon",0,0,3,["ground"]],["Rayquaza",0,0,3,["dragon","flying"]],["Jirachi",0,0,3,["steel","psychic"]],["Deoxys",0,0,3,["psychic"]],["Turtwig","Chelast","Tortipouss",4,["grass"]],["Grotle","Chelcarain","Boskara",4,["grass"]],["Torterra","Chelterrar",0,4,["grass","ground"]],["Chimchar","Panflam","Ouisticram",4,["fire"]],["Monferno","Panpyro","Chimpenfeu",4,["fire","fighting"]],["Infernape","Panferno","Simiabraz",4,["fire","fighting"]],["Piplup","Plinfa","Tiplouf",4,["water"]],["Prinplup","Pliprin","Prinplouf",4,["water"]],["Empoleon","Impoleon","Pingoléon",4,["water","steel"]],["Starly","Staralili","Étourmi",4,["normal","flying"]],["Staravia",0,"Étourvol",4,["normal","flying"]],["Staraptor",0,"Étouraptor",4,["normal","flying"]],["Bidoof","Bidiza","Keunotor",4,["normal"]],["Bibarel","Bidifas","Castorno",4,["normal","water"]],["Kricketot","Zirpurze","Crikzik",4,["bug"]],["Kricketune","Zirpeise","Mélokrik",4,["bug"]],["Shinx","Sheinux","Lixy",4,["electric"]],["Luxio",0,0,4,["electric"]],["Luxray","Luxtra",0,4,["electric"]],["Budew","Knospi","Rozbouton",4,["grass","poison"]],["Roserade",0,0,4,["grass","poison"]],["Cranidos","Koknodon","Kranidos",4,["rock"]],["Rampardos","Rameidon","Charkos",4,["rock"]],["Shieldon","Schilterus","Dinoclier",4,["rock","steel"]],["Bastiodon","Bollterus",0,4,["rock","steel"]],["Burmy",0,"Cheniti",4,["bug"]],["Wormadam","Burmadame","Cheniselle",4,["bug","grass"]],["Mothim","Moterpel","Papilord",4,["bug","flying"]],["Combee","Wadribie","Apitrini",4,["bug","flying"]],["Vespiquen","Honweisel","Apireine",4,["bug","flying"]],["Pachirisu",0,0,4,["electric"]],["Buizel","Bamelin","Mustébouée",4,["water"]],["Floatzel","Bojelin","Mustéflott",4,["water"]],["Cherubi","Kikugi","Ceribou",4,["grass"]],["Cherrim","Kinoso","Ceriflor",4,["grass"]],["Shellos","Schalellos","Sancoki",4,["water"]],["Gastrodon",0,"Tritosor",4,["water","ground"]],["Ambipom","Ambidiffel","Capidextre",4,["normal"]],["Drifloon","Driftlon","Baudrive",4,["ghost","flying"]],["Drifblim","Drifzepeli","Grodrive",4,["ghost","flying"]],["Buneary","Haspiror","Laporeille",4,["normal"]],["Lopunny","Schlapor","Lockpin",4,["normal"]],["Mismagius","Traunmagil","Magirêve",4,["ghost"]],["Honchkrow","Kramshef","Corboss",4,["dark","flying"]],["Glameow","Charmian","Chaglam",4,["normal"]],["Purugly","Shnurgarst","Chaffreux",4,["normal"]],["Chingling","Klingplim","Korillon",4,["psychic"]],["Stunky","Skunkapuh","Moufouette",4,["poison","dark"]],["Skuntank",0,"Moufflair",4,["poison","dark"]],["Bronzor","Bronzel","Archéomire",4,["steel","psychic"]],["Bronzong",0,"Archéodong",4,["steel","psychic"]],["Bonsly","Mobai","Manzaï",4,["rock"]],["Mime Jr.","Pantimimi",0,4,["psychic","fairy"]],["Happiny","Wonneira","Ptiravi",4,["normal"]],["Chatot","Plaudagei","Pijako",4,["normal","flying"]],["Spiritomb","Kryppuk",0,4,["ghost","dark"]],["Gible","Kaumalat","Griknot",4,["dragon","ground"]],["Gabite","Knarksel","Carmache",4,["dragon","ground"]],["Garchomp","Knakrack","Carchacrok",4,["dragon","ground"]],["Munchlax","Mampfaxo","Goinfrex",4,["normal"]],["Riolu",0,0,4,["fighting"]],["Lucario",0,0,4,["fighting","steel"]],["Hippopotas",0,0,4,["ground"]],["Hippowdon","Hippoterus","Hippodocus",4,["ground"]],["Skorupi","Pionskora","Rapion",4,["poison","bug"]],["Drapion","Piondragi","Drascore",4,["poison","dark"]],["Croagunk","Glibunkel","Cradopaud",4,["poison","fighting"]],["Toxicroak","Toxiquak","Coatox",4,["poison","fighting"]],["Carnivine","Venuflibis","Vortente",4,["grass"]],["Finneon",0,"Écayon",4,["water"]],["Lumineon",0,"Luminéon",4,["water"]],["Mantyke","Mantirps","Babimanta",4,["water","flying"]],["Snover","Shnebedeck","Blizzi",4,["grass","ice"]],["Abomasnow","Rexblisar","Blizzaroi",4,["grass","ice"]],["Weavile","Snibunna","Dimoret",4,["dark","ice"]],["Magnezone",0,"Magnézone",4,["electric","steel"]],["Lickilicky","Schlurplek","Coudlangue",4,["normal"]],["Rhyperior","Rihornior","Rhinastoc",4,["ground","rock"]],["Tangrowth","Tangoloss","Bouldeneu",4,["grass"]],["Electivire","Elevoltek","Élekable",4,["electric"]],["Magmortar","Magbrant","Maganon",4,["fire"]],["Togekiss",0,0,4,["fairy","flying"]],["Yanmega",0,0,4,["bug","flying"]],["Leafeon","Folipurba","Phyllali",4,["grass"]],["Glaceon","Glaziola","Givrali",4,["ice"]],["Gliscor","Skorgro","Scorvol",4,["ground","flying"]],["Mamoswine","Mamutel","Mammochon",4,["ice","ground"]],["Porygon-Z",0,0,4,["normal"]],["Gallade","Galagladi","Gallame",4,["psychic","fighting"]],["Probopass","Voluminas","Tarinorme",4,["rock","steel"]],["Dusknoir","Zwirrfinst","Noctunoir",4,["ghost"]],["Froslass","Frosdedje","Momartik",4,["ice","ghost"]],["Rotom",0,"Motisma",4,["electric","ghost"]],["Uxie","Selfe","Créhelf",4,["psychic"]],["Mesprit","Vesprit","Créfollet",4,["psychic"]],["Azelf","Tobutz","Créfadet",4,["psychic"]],["Dialga",0,0,4,["steel","dragon"]],["Palkia",0,0,4,["water","dragon"]],["Heatran",0,0,4,["fire","steel"]],["Regigigas",0,0,4,["normal"]],["Giratina",0,0,4,["ghost","dragon"]],["Cresselia",0,0,4,["psychic"]],["Phione",0,0,4,["water"]],["Manaphy",0,0,4,["water"]],["Darkrai",0,0,4,["dark"]],["Shaymin",0,0,4,["grass"]],["Arceus",0,0,4,["normal"]],["Victini",0,0,5,["psychic","fire"]],["Snivy","Serpifeu","Vipélierre",5,["grass"]],["Servine","Efoserp","Lianaja",5,["grass"]],["Serperior","Serpiroyal","Majaspic",5,["grass"]],["Tepig","Floink","Gruikui",5,["fire"]],["Pignite","Ferkokel","Grotichon",5,["fire","fighting"]],["Emboar","Flambirex","Roitiflam",5,["fire","fighting"]],["Oshawott","Ottaro","Moustillon",5,["water"]],["Dewott","Zwottronin","Mateloutre",5,["water"]],["Samurott","Admurai","Clamiral",5,["water"]],["Patrat","Nagelotz","Ratentif",5,["normal"]],["Watchog","Kukmarda","Miradar",5,["normal"]],["Lillipup","Yorkleff","Ponchiot",5,["normal"]],["Herdier","Terribark","Ponchien",5,["normal"]],["Stoutland","Bissbark","Mastouffe",5,["normal"]],["Purrloin","Felilou","Chacripan",5,["dark"]],["Liepard","Kleoparda","Léopardus",5,["dark"]],["Pansage","Vegimak","Feuillajou",5,["grass"]],["Simisage","Vegichita","Feuiloutan",5,["grass"]],["Pansear","Grillmak","Flamajou",5,["fire"]],["Simisear","Grillchita","Flamoutan",5,["fire"]],["Panpour","Sodamak","Flotajou",5,["water"]],["Simipour","Sodachita","Flotoutan",5,["water"]],["Munna","Somniam",0,5,["psychic"]],["Musharna","Somnivora","Mushana",5,["psychic"]],["Pidove","Dusselgurr","Poichigeon",5,["normal","flying"]],["Tranquill","Navitaub","Colombeau",5,["normal","flying"]],["Unfezant","Fasasnob","Déflaisan",5,["normal","flying"]],["Blitzle","Elezeba","Zébibron",5,["electric"]],["Zebstrika","Zebritz","Zéblitz",5,["electric"]],["Roggenrola","Kiesling","Nodulithe",5,["rock"]],["Boldore","Sedimantur","Géolithe",5,["rock"]],["Gigalith","Brockoloss","Gigalithe",5,["rock"]],["Woobat","Fleknoil","Chovsourir",5,["psychic","flying"]],["Swoobat","Fletiamo","Rhinolove",5,["psychic","flying"]],["Drilbur","Rotomurf","Rototaupe",5,["ground"]],["Excadrill","Stalobor","Minotaupe",5,["ground","steel"]],["Audino","Ohrdoch","Nanméouïe",5,["normal"]],["Timburr","Praktibalk","Charpenti",5,["fighting"]],["Gurdurr","Strepoli","Ouvrifier",5,["fighting"]],["Conkeldurr","Meistagrif","Bétochef",5,["fighting"]],["Tympole","Schallquap","Tritonde",5,["water"]],["Palpitoad","Mebrana","Batracné",5,["water","ground"]],["Seismitoad","Branawarz","Crapustule",5,["water","ground"]],["Throh","Jiutesto","Judokrak",5,["fighting"]],["Sawk","Karadonis","Karaclée",5,["fighting"]],["Sewaddle","Strawickl","Larveyette",5,["bug","grass"]],["Swadloon","Folikon","Couverdure",5,["bug","grass"]],["Leavanny","Matrifol","Manternel",5,["bug","grass"]],["Venipede","Toxiped","Venipatte",5,["bug","poison"]],["Whirlipede","Rollum","Scobolide",5,["bug","poison"]],["Scolipede","Cerapendra","Brutapode",5,["bug","poison"]],["Cottonee","Waumboll","Doudouvet",5,["grass","fairy"]],["Whimsicott","Elfun","Farfaduvet",5,["grass","fairy"]],["Petilil","Lilminip","Chlorobule",5,["grass"]],["Lilligant","Dressella","Fragilady",5,["grass"]],["Basculin","Barschuft","Bargantua",5,["water"]],["Sandile","Ganovil","Mascaïman",5,["ground","dark"]],["Krokorok","Rokkaiman","Escroco",5,["ground","dark"]],["Krookodile","Rabigator","Crocorible",5,["ground","dark"]],["Darumaka","Flampion","Darumarond",5,["fire"]],["Darmanitan","Flampivian","Darumacho",5,["fire"]],["Maractus","Maracamba","Maracachi",5,["grass"]],["Dwebble","Lithomith","Crabicoque",5,["bug","rock"]],["Crustle","Castellith","Crabaraque",5,["bug","rock"]],["Scraggy","Zurrokex","Baggiguane",5,["dark","fighting"]],["Scrafty","Irokex","Baggaïd",5,["dark","fighting"]],["Sigilyph","Symvolara","Cryptéro",5,["psychic","flying"]],["Yamask","Makabaja","Tutafeh",5,["ghost"]],["Cofagrigus","Echnatoll","Tutankafer",5,["ghost"]],["Tirtouga","Galapaflos","Carapagos",5,["water","rock"]],["Carracosta","Karippas","Mégapagos",5,["water","rock"]],["Archen","Flapteryx","Arkéapti",5,["rock","flying"]],["Archeops","Aeropteryx","Aéroptéryx",5,["rock","flying"]],["Trubbish","Unratütox","Miamiasme",5,["poison"]],["Garbodor","Deponitox","Miasmax",5,["poison"]],["Zorua",0,0,5,["dark"]],["Zoroark",0,0,5,["dark"]],["Minccino","Picochilla","Chinchidou",5,["normal"]],["Cinccino","Chillabell","Pashmilla",5,["normal"]],["Gothita","Mollimorba","Scrutella",5,["psychic"]],["Gothorita","Hypnomorba","Mesmérella",5,["psychic"]],["Gothitelle","Morbitesse","Sidérella",5,["psychic"]],["Solosis","Monozyto","Nucléos",5,["psychic"]],["Duosion","Mitodos","Méios",5,["psychic"]],["Reuniclus","Zytomega","Symbios",5,["psychic"]],["Ducklett","Piccolente","Couaneton",5,["water","flying"]],["Swanna","Swaroness","Lakmécygne",5,["water","flying"]],["Vanillite","Gelatini","Sorbébé",5,["ice"]],["Vanillish","Gelatroppo","Sorboul",5,["ice"]],["Vanilluxe","Gelatwino","Sorbouboul",5,["ice"]],["Deerling","Sesokitz","Vivaldaim",5,["normal","grass"]],["Sawsbuck","Kronjuwild","Haydaim",5,["normal","grass"]],["Emolga",0,0,5,["electric","flying"]],["Karrablast","Laukaps","Carabing",5,["bug"]],["Escavalier","Cavalanzas","Lançargot",5,["bug","steel"]],["Foongus","Tarnpignon","Trompignon",5,["grass","poison"]],["Amoonguss","Hutsassa","Gaulet",5,["grass","poison"]],["Frillish","Quabbel","Viskuse",5,["water","ghost"]],["Jellicent","Apoquallyp","Moyade",5,["water","ghost"]],["Alomomola","Mamolida","Mamanbo",5,["water"]],["Joltik","Wattzapf","Statitik",5,["bug","electric"]],["Galvantula","Voltula","Mygavolt",5,["bug","electric"]],["Ferroseed","Kastadur","Grindur",5,["grass","steel"]],["Ferrothorn","Tentantel","Noacier",5,["grass","steel"]],["Klink","Klikk","Tic",5,["steel"]],["Klang","Kliklak","Clic",5,["steel"]],["Klinklang","Klikdiklak","Cliticlic",5,["steel"]],["Tynamo","Zapplardin","Anchwatt",5,["electric"]],["Eelektrik","Zapplalek","Lampéroie",5,["electric"]],["Eelektross","Zapplarang","Ohmassacre",5,["electric"]],["Elgyem","Pygraulon","Lewsor",5,["psychic"]],["Beheeyem","Megalon","Neitram",5,["psychic"]],["Litwick","Lichtel","Funécire",5,["ghost","fire"]],["Lampent","Laternecto","Mélancolux",5,["ghost","fire"]],["Chandelure","Skelabra","Lugulabre",5,["ghost","fire"]],["Axew","Milza","Coupenotte",5,["dragon"]],["Fraxure","Sharfax","Incisache",5,["dragon"]],["Haxorus","Maxax","Tranchodon",5,["dragon"]],["Cubchoo","Petznief","Polarhume",5,["ice"]],["Beartic","Siberio","Polagriffe",5,["ice"]],["Cryogonal","Frigometri","Hexagel",5,["ice"]],["Shelmet","Schnuthelm","Escargaume",5,["bug"]],["Accelgor","Hydragil","Limaspeed",5,["bug"]],["Stunfisk","Flunschlik","Limonde",5,["ground","electric"]],["Mienfoo","Lin-Fu","Kungfouine",5,["fighting"]],["Mienshao","Wie-Shu","Shaofouine",5,["fighting"]],["Druddigon","Shardrago","Drakkarmin",5,["dragon"]],["Golett","Golbit","Gringolem",5,["ground","ghost"]],["Golurk","Golgantes","Golemastoc",5,["ground","ghost"]],["Pawniard","Gladiantri","Scalpion",5,["dark","steel"]],["Bisharp","Caesurio","Scalproie",5,["dark","steel"]],["Bouffalant","Bisofank","Frison",5,["normal"]],["Rufflet","Geronimatz","Furaiglon",5,["normal","flying"]],["Braviary","Washakwil","Gueriaigle",5,["normal","flying"]],["Vullaby","Skallyk","Vostourno",5,["dark","flying"]],["Mandibuzz","Grypheldis","Vaututrice",5,["dark","flying"]],["Heatmor","Furnifraß","Aflamanoir",5,["fire"]],["Durant","Fermicula","Fermite",5,["bug","steel"]],["Deino","Kapuno","Solochi",5,["dark","dragon"]],["Zweilous","Duodino","Diamat",5,["dark","dragon"]],["Hydreigon","Trikephalo","Trioxhydre",5,["dark","dragon"]],["Larvesta","Ignivor","Pyronille",5,["bug","fire"]],["Volcarona","Ramoth","Pyrax",5,["bug","fire"]],["Cobalion","Kobalium","Cobaltium",5,["steel","fighting"]],["Terrakion","Terrakium","Terrakium",5,["rock","fighting"]],["Virizion","Viridium","Viridium",5,["grass","fighting"]],["Tornadus","Boreos","Boréas",5,["flying"]],["Thundurus","Voltolos","Fulguris",5,["electric","flying"]],["Reshiram",0,0,5,["dragon","fire"]],["Zekrom",0,0,5,["dragon","electric"]],["Landorus","Demeteros","Démétéros",5,["ground","flying"]],["Kyurem",0,0,5,["dragon","ice"]],["Keldeo",0,0,5,["water","fighting"]],["Meloetta",0,0,5,["normal","psychic"]],["Genesect",0,0,5,["bug","steel"]],["Chespin","Igamaro","Marisson",6,["grass"]],["Quilladin","Igastarnish","Boguérisse",6,["grass"]],["Chesnaught","Brigaron","Blindépique",6,["grass","fighting"]],["Fennekin","Fynx","Feunnec",6,["fire"]],["Braixen","Rutena","Roussil",6,["fire"]],["Delphox","Fennexis","Goupelin",6,["fire","psychic"]],["Froakie","Froxy","Grenousse",6,["water"]],["Frogadier","Amphizel","Croâporal",6,["water"]],["Greninja","Quajutsu","Amphinobi",6,["water","dark"]],["Bunnelby","Scoppel","Sapereau",6,["normal"]],["Diggersby","Grebbit","Excavarenne",6,["normal","ground"]],["Fletchling","Dartiri","Passerouge",6,["normal","flying"]],["Fletchinder","Dartignis","Braisillon",6,["fire","flying"]],["Talonflame","Fiaro","Flambusard",6,["fire","flying"]],["Scatterbug","Purmel","Lépidonille",6,["bug"]],["Spewpa","Puponcho","Pérégrain",6,["bug"]],["Vivillon",0,"Prismillon",6,["bug","flying"]],["Litleo","Leufeo","Hélionceau",6,["fire","normal"]],["Pyroar","Pyroleo","Némélios",6,["fire","normal"]],["Flabébé",0,0,6,["fairy"]],["Floette",0,0,6,["fairy"]],["Florges",0,0,6,["fairy"]],["Skiddo","Mähikel","Cabriolaine",6,["grass"]],["Gogoat","Chevrumm","Chevroum",6,["grass"]],["Pancham","Pam-Pam","Pandespiègle",6,["fighting"]],["Pangoro","Pandagro","Pandarbare",6,["fighting","dark"]],["Furfrou","Coiffwaff","Couafarel",6,["normal"]],["Espurr","Psiau","Psystigri",6,["psychic"]],["Meowstic","Psiaugon","Mistigrix",6,["psychic"]],["Honedge","Gramokles","Monorpale",6,["steel","ghost"]],["Doublade","Duokles","Dimoclès",6,["steel","ghost"]],["Aegislash","Durengard","Exagide",6,["steel","ghost"]],["Spritzee","Parfi","Fluvetin",6,["fairy"]],["Aromatisse","Parfinesse","Cocotine",6,["fairy"]],["Swirlix","Flauschling","Sucroquin",6,["fairy"]],["Slurpuff","Sabbaione","Cupcanaille",6,["fairy"]],["Inkay","Iscalar","Sepiatop",6,["dark","psychic"]],["Malamar","Calamanero","Sepiatroce",6,["dark","psychic"]],["Binacle","Bithora","Opermine",6,["rock","water"]],["Barbaracle","Thanathora","Golgopathe",6,["rock","water"]],["Skrelp","Algitt","Venalgue",6,["poison","water"]],["Dragalge","Tandrak","Kravarech",6,["poison","dragon"]],["Clauncher","Scampisto","Flingouste",6,["water"]],["Clawitzer","Wummer","Gamblast",6,["water"]],["Helioptile","Eguana","Galvaran",6,["electric","normal"]],["Heliolisk","Elezard","Iguolta",6,["electric","normal"]],["Tyrunt","Balgoras","Ptyranidur",6,["rock","dragon"]],["Tyrantrum","Monargoras","Rexillius",6,["rock","dragon"]],["Amaura","Amarino","Amagara",6,["rock","ice"]],["Aurorus","Amagarga","Dragmara",6,["rock","ice"]],["Sylveon","Feelinara","Nymphali",6,["fairy"]],["Hawlucha","Resladero","Brutalibré",6,["fighting","flying"]],["Dedenne",0,0,6,["electric","fairy"]],["Carbink","Rocara","Strassie",6,["rock","fairy"]],["Goomy","Viscora","Mucuscule",6,["dragon"]],["Sliggoo","Viscargot","Colimucus",6,["dragon"]],["Goodra","Viscogon","Muplodocus",6,["dragon"]],["Klefki","Clavion","Trousselin",6,["steel","fairy"]],["Phantump","Paragoni","Brocélôme",6,["ghost","grass"]],["Trevenant","Trombork","Desséliande",6,["ghost","grass"]],["Pumpkaboo","Irrbis","Pitrouille",6,["ghost","grass"]],["Gourgeist","Pumpdjinn","Banshitrouye",6,["ghost","grass"]],["Bergmite","Arktip","Grelaçon",6,["ice"]],["Avalugg","Arktilas","Séracrawl",6,["ice"]],["Noibat","eF-eM","Sonistrelle",6,["flying","dragon"]],["Noivern","UHaFnir","Bruyverne",6,["flying","dragon"]],["Xerneas",0,0,6,["fairy"]],["Yveltal",0,0,6,["dark","flying"]],["Zygarde",0,0,6,["dragon","ground"]],["Diancie",0,0,6,["rock","fairy"]],["Hoopa",0,0,6,["psychic","ghost"]],["Volcanion",0,0,6,["fire","water"]],["Rowlet","Bauz","Brindibou",7,["grass","flying"]],["Dartrix","Arboretoss","Efflèche",7,["grass","flying"]],["Decidueye","Silvarro","Archéduc",7,["grass","ghost"]],["Litten","Flamiau","Flamiaou",7,["fire"]],["Torracat","Miezunder","Matoufeu",7,["fire"]],["Incineroar","Fuegro","Félinferno",7,["fire","dark"]],["Popplio","Robball","Otaquin",7,["water"]],["Brionne","Marikeck","Otarlette",7,["water"]],["Primarina","Primarene","Oratoria",7,["water","fairy"]],["Pikipek","Peppeck","Picassaut",7,["normal","flying"]],["Trumbeak","Trompeck","Piclairon",7,["normal","flying"]],["Toucannon","Tukanon","Bazoucan",7,["normal","flying"]],["Yungoos","Mangunior","Manglouton",7,["normal"]],["Gumshoos","Manguspektor","Argouste",7,["normal"]],["Grubbin","Mabula","Larvibule",7,["bug"]],["Charjabug","Akkup","Chrysapile",7,["bug","electric"]],["Vikavolt","Donarion","Lucanon",7,["bug","electric"]],["Crabrawler","Krabbox","Crabagarre",7,["fighting"]],["Crabominable","Krawell",0,7,["fighting","ice"]],["Oricorio","Choreogel","Plumeline",7,["fire","flying"]],["Cutiefly","Wommel","Bombydou",7,["bug","fairy"]],["Ribombee","Bandelby","Rubombelle",7,["bug","fairy"]],["Rockruff","Wuffels","Rocabot",7,["rock"]],["Lycanroc","Wolwerock","Lougaroc",7,["rock"]],["Wishiwashi","Lusardin","Froussardine",7,["water"]],["Mareanie","Garstella","Vorastérie",7,["poison","water"]],["Toxapex","Aggrostella","Prédastérie",7,["poison","water"]],["Mudbray","Pampuli","Tiboudet",7,["ground"]],["Mudsdale","Pampross","Bourrinos",7,["ground"]],["Dewpider","Araqua","Araqua",7,["water","bug"]],["Araquanid","Aranestro","Tarenbulle",7,["water","bug"]],["Fomantis","Imantis","Mimantis",7,["grass"]],["Lurantis","Mantidea","Floramantis",7,["grass"]],["Morelull","Bubungus","Spododo",7,["grass","fairy"]],["Shiinotic","Lamellux","Lampignon",7,["grass","fairy"]],["Salandit","Molunk","Tritox",7,["poison","fire"]],["Salazzle","Amfira","Malamandre",7,["poison","fire"]],["Stufful","Velursi","Nounourson",7,["normal","fighting"]],["Bewear","Kosturso","Chelours",7,["normal","fighting"]],["Bounsweet","Frubberl","Croquine",7,["grass"]],["Steenee","Frubaila","Candine",7,["grass"]],["Tsareena","Fruyal","Sucreine",7,["grass"]],["Comfey","Curelei","Guérilande",7,["fairy"]],["Oranguru","Kommandutan","Gouroutan",7,["normal","psychic"]],["Passimian","Quartermak","Quartermac",7,["fighting"]],["Wimpod","Reißlaus","Sovkipou",7,["bug","water"]],["Golisopod","Tectass","Sarmuraï",7,["bug","water"]],["Sandygast","Sankabuh","Bacabouh",7,["ghost","ground"]],["Palossand","Colossand","Trépassable",7,["ghost","ground"]],["Pyukumuku","Gufa","Concombaffe",7,["water"]],["Type: Null","Typ:Null","Type:0",7,["normal"]],["Silvally","Amigento","Silvallié",7,["normal"]],["Minior","Meteno","Météno",7,["rock","flying"]],["Komala","Koalelu","Dodoala",7,["normal"]],["Turtonator","Tortunator","Boumata",7,["fire","dragon"]],["Togedemaru",0,0,7,["electric","steel"]],["Mimikyu","Mimigma","Mimiqui",7,["ghost","fairy"]],["Bruxish","Knirfish","Denticrisse",7,["water","psychic"]],["Drampa","Sen-Long","Draïeul",7,["normal","dragon"]],["Dhelmise","Moruda","Sinistrail",7,["ghost","grass"]],["Jangmo-o","Miniras","Bébécaille",7,["dragon"]],["Hakamo-o","Mediras","Écaïd",7,["dragon","fighting"]],["Kommo-o","Grandiras","Ékaïser",7,["dragon","fighting"]],["Tapu Koko","Kapu-Riki","Tokorico",7,["electric","fairy"]],["Tapu Lele","Kapu-Fala","Tokopiyon",7,["psychic","fairy"]],["Tapu Bulu","Kapu-Toro","Tokotoro",7,["grass","fairy"]],["Tapu Fini","Kapu-Kime","Tokopisco",7,["water","fairy"]],["Cosmog",0,0,7,["psychic"]],["Cosmoem","Cosmovum","Cosmovum",7,["psychic"]],["Solgaleo",0,0,7,["psychic","steel"]],["Lunala",0,0,7,["psychic","ghost"]],["Nihilego","Anego","Zéroïd",7,["rock","poison"]],["Buzzwole","Masskito","Mouscoto",7,["bug","fighting"]],["Pheromosa","Schabelle","Cancrelove",7,["bug","fighting"]],["Xurkitree","Voltriant","Câblifère",7,["electric"]],["Celesteela","Kaguron","Bamboiselle",7,["steel","flying"]],["Kartana","Katagami","Katagami",7,["grass","steel"]],["Guzzlord","Schlingking","Engloutyran",7,["dark","dragon"]],["Necrozma",0,0,7,["psychic"]],["Magearna",0,0,7,["steel","fairy"]],["Marshadow",0,0,7,["fighting","ghost"]],["Poipole","Venicro","Vémini",7,["poison"]],["Naganadel","Agoyon","Mandrillon",7,["poison","dragon"]],["Stakataka","Muramura","Ama-Ama",7,["rock","steel"]],["Blacephalon","Kopplosio","Pierroteknik",7,["fire","ghost"]],["Zeraora",0,0,7,["electric"]],["Meltan",0,0,7,["steel"]],["Melmetal",0,0,7,["steel"]],["Grookey","Chimpep","Ouistempo",8,["grass"]],["Thwackey","Chimstix","Badabouin",8,["grass"]],["Rillaboom","Gortrom","Gorythmic",8,["grass"]],["Scorbunny","Hopplo","Flambino",8,["fire"]],["Raboot","Kickerlo","Lapyro",8,["fire"]],["Cinderace","Liberlo","Pyrobut",8,["fire"]],["Sobble","Memmeon","Larméléon",8,["water"]],["Drizzile","Phlegleon","Arrozard",8,["water"]],["Inteleon","Intelleon","Lézargus",8,["water"]],["Skwovet","Raffel","Rongourmand",8,["normal"]],["Greedent","Schlaraffel","Rongrigou",8,["normal"]],["Rookidee","Meikro","Minisange",8,["flying"]],["Corvisquire","Kranoviz","Bleuseille",8,["flying"]],["Corviknight","Krarmor","Corvaillus",8,["flying","steel"]],["Blipbug","Sensect","Larvadar",8,["bug"]],["Dottler","Keradar","Coléodôme",8,["bug","psychic"]],["Orbeetle","Maritellit","Astronelle",8,["bug","psychic"]],["Nickit","Kleptifux","Goupilou",8,["dark"]],["Thievul","Gaunux","Roublenard",8,["dark"]],["Gossifleur","Cottini","Tournicoton",8,["grass"]],["Eldegoss","Cottomi","Blancoton",8,["grass"]],["Wooloo","Wolly","Moumouton",8,["normal"]],["Dubwool","Zwollock","Moumouflon",8,["normal"]],["Chewtle","Kamehaps","Khélocrok",8,["water"]],["Drednaw","Kamalm","Torgamord",8,["water","rock"]],["Yamper","Voldi","Voltoutou",8,["electric"]],["Boltund","Bellektro","Fulgudog",8,["electric"]],["Rolycoly","Klonkett","Charbi",8,["rock"]],["Carkol","Wagong","Wagomine",8,["rock","fire"]],["Coalossal","Montecarbo","Monthracite",8,["rock","fire"]],["Applin","Knapfel","Verpom",8,["grass","dragon"]],["Flapple","Drapfel","Pomdrapi",8,["grass","dragon"]],["Appletun","Schlapfel","Dratatin",8,["grass","dragon"]],["Silicobra","Salanga","Dunaja",8,["ground"]],["Sandaconda","Sanaconda","Dunaconda",8,["ground"]],["Cramorant","Urgl","Nigosier",8,["flying","water"]],["Arrokuda","Pikuda","Embrochet",8,["water"]],["Barraskewda","Barrakiefa","Hastacuda",8,["water"]],["Toxel",0,"Toxizap",8,["electric","poison"]],["Toxtricity","Riffex","Salarsen",8,["electric","poison"]],["Sizzlipede","Thermopod","Grillepattes",8,["fire","bug"]],["Centiskorch","Infernopod","Scolocendre",8,["fire","bug"]],["Clobbopus","Klopptopus","Poulpaf",8,["fighting"]],["Grapploct","Kaocto","Krakos",8,["fighting"]],["Sinistea","Fatalitee","Théffroi",8,["ghost"]],["Polteageist","Mortipot","Polthégeist",8,["ghost"]],["Hatenna","Brimova","Bibichut",8,["psychic"]],["Hattrem","Brimano","Chapotus",8,["psychic"]],["Hatterene","Silembrim","Sorcilence",8,["psychic","fairy"]],["Impidimp","Bähmon","Grimalin",8,["dark","fairy"]],["Morgrem","Pelzebub","Fourbelin",8,["dark","fairy"]],["Grimmsnarl","Olangaar","Angoliath",8,["dark","fairy"]],["Obstagoon","Barrikadax","Ixon",8,["dark","normal"]],["Perrserker","Mauzinger","Berserkatt",8,["steel"]],["Cursola","Gorgasonn","Corayôme",8,["ghost"]],["Sirfetch’d","Lauchzelot","Palarticho",8,["fighting"]],["Mr. Rime","Pantifrost","M. Glaquette",8,["ice","psychic"]],["Runerigus","Oghnatoll","Tutétékri",8,["ground","ghost"]],["Milcery","Hokumil","Crèmy",8,["fairy"]],["Alcremie","Pokusan","Charmilly",8,["fairy"]],["Falinks","Legios","Hexadron",8,["fighting"]],["Pincurchin","Britzigel","Wattapik",8,["electric"]],["Snom","Snomnom","Frissonille",8,["ice","bug"]],["Frosmoth","Mottineva","Beldeneige",8,["ice","bug"]],["Stonjourner","Humanolith","Dolman",8,["rock"]],["Eiscue","Kubuin","Bekaglaçon",8,["ice"]],["Indeedee","Servol","Wimessir",8,["psychic","normal"]],["Morpeko",0,0,8,["electric","dark"]],["Cufant","Kupfanti","Charibari",8,["steel"]],["Copperajah","Patinaraja","Pachyradjah",8,["steel"]],["Dracozolt","Lectragon","Galvagon",8,["electric","dragon"]],["Arctozolt","Lecryodon","Galvagla",8,["electric","ice"]],["Dracovish","Pescragon","Hydragon",8,["water","dragon"]],["Arctovish","Pescryodon","Hydragla",8,["water","ice"]],["Duraludon",0,"Duralugon",8,["steel","dragon"]],["Dreepy","Grolldra","Fantyrm",8,["dragon","ghost"]],["Drakloak","Phandra","Dispareptil",8,["dragon","ghost"]],["Dragapult","Katapuldra","Lanssorien",8,["dragon","ghost"]],["Zacian",0,0,8,["fairy"]],["Zamazenta",0,0,8,["fighting"]],["Eternatus","Endynalos","Éthernatos",8,["poison","dragon"]],["Kubfu","Dakuma","Wushours",8,["fighting"]],["Urshifu","Wulaosu","Shifours",8,["fighting","dark"]],["Zarude",0,0,8,["dark","grass"]],["Regieleki",0,0,8,["electric"]],["Regidrago",0,0,8,["dragon"]],["Glastrier","Polaross","Blizzeval",8,["ice"]],["Spectrier","Phantoross","Spectreval",8,["ghost"]],["Calyrex","Coronospa","Sylveroy",8,["psychic","grass"]],["Wyrdeer","Damythir","Cerbyllin",8,["normal","psychic"]],["Kleavor","Axantor","Hachécateur",8,["bug","rock"]],["Ursaluna",0,"Ursaking",8,["ground","normal"]],["Basculegion","Salmagnis","Paragruel",8,["water","ghost"]],["Sneasler","Snieboss","Farfurex",8,["fighting","poison"]],["Overqwil","Myriador","Qwilpik",8,["dark","poison"]],["Enamorus","Cupidos","Amovénus",8,["fairy","flying"]],["Sprigatito","Felori","Poussacha",9,["grass"]],["Floragato","Feliospa","Matourgeon",9,["grass"]],["Meowscarada","Maskagato","Miascarade",9,["grass","dark"]],["Fuecoco","Krokel","Chochodile",9,["fire"]],["Crocalor","Lokroko","Crocogril",9,["fire"]],["Skeledirge","Skelokrok","Flâmigator",9,["fire","ghost"]],["Quaxly","Kwaks","Coiffeton",9,["water"]],["Quaxwell","Fuentente","Canarbello",9,["water"]],["Quaquaval","Bailonda","Palmaval",9,["water","fighting"]],["Lechonk","Ferkuli","Gourmelet",9,["normal"]],["Oinkologne","Fragrunz","Fragroin",9,["normal"]],["Tarountula","Tarundel","Tissenboule",9,["bug"]],["Spidops","Spinsidias","Filentrappe",9,["bug"]],["Nymble","Micrick","Lilliterelle",9,["bug"]],["Lokix","Lextremo","Gambex",9,["bug","dark"]],["Pawmi","Pamo","Pohm",9,["electric"]],["Pawmo","Pamamo","Pohmotte",9,["electric","fighting"]],["Pawmot","Pamomamo","Pohmarmotte",9,["electric","fighting"]],["Tandemaus","Zwieps","Compagnol",9,["normal"]],["Maushold","Famieps","Famignol",9,["normal"]],["Fidough","Hefel","Pâtachiot",9,["fairy"]],["Dachsbun","Backel","Briochien",9,["fairy"]],["Smoliv","Olini","Olivini",9,["grass","normal"]],["Dolliv","Olivinio","Olivado",9,["grass","normal"]],["Arboliva","Olithena",0,9,["grass","normal"]],["Squawkabilly","Krawalloro","Tapatoès",9,["normal","flying"]],["Nacli","Geosali","Selutin",9,["rock"]],["Naclstack","Sedisal","Amassel",9,["rock"]],["Garganacl","Saltigant","Gigansel",9,["rock"]],["Charcadet","Knarbon","Charbambin",9,["fire"]],["Armarouge","Crimanzo","Carmadura",9,["fire","psychic"]],["Ceruledge","Azugladis","Malvalame",9,["fire","ghost"]],["Tadbulb","Blipp","Têtampoule",9,["electric"]],["Bellibolt","Wampitz","Ampibidou",9,["electric"]],["Wattrel","Voltrel","Zapétrel",9,["electric","flying"]],["Kilowattrel","Voltrean","Fulgulairo",9,["electric","flying"]],["Maschiff","Mobtiff","Grondogue",9,["dark"]],["Mabosstiff","Mastifioso","Dogrino",9,["dark"]],["Shroodle","Sproxi","Gribouraigne",9,["poison","normal"]],["Grafaiai","Affiti","Tag-Tag",9,["poison","normal"]],["Bramblin","Weherba","Virovent",9,["grass","ghost"]],["Brambleghast","Horrerba","Virevorreur",9,["grass","ghost"]],["Toedscool","Tentagra","Terracool",9,["ground","grass"]],["Toedscruel","Tenterra","Terracruel",9,["ground","grass"]],["Klawf","Klibbe","Craparoi",9,["rock"]],["Capsakid","Chilingel","Pimito",9,["grass"]],["Scovillain","Halupenjo","Scovilain",9,["grass","fire"]],["Rellor","Relluk","Léboulérou",9,["bug"]],["Rabsca","Skarabaks","Bérasca",9,["bug","psychic"]],["Flittle","Flattutu","Flotillon",9,["psychic"]],["Espathra","Psiopatra","Cléopsytra",9,["psychic"]],["Tinkatink","Forgita","Forgerette",9,["fairy","steel"]],["Tinkatuff","Tafforgita","Forgella",9,["fairy","steel"]],["Tinkaton","Granforgita","Forgelina",9,["fairy","steel"]],["Wiglett","Schligda","Taupikeau",9,["water"]],["Wugtrio","Schligdri","Triopikeau",9,["water"]],["Bombirdier","Adebom","Lestombaile",9,["flying","dark"]],["Finizen","Normifin","Dofin",9,["water"]],["Palafin","Delfinator","Superdofin",9,["water"]],["Varoom","Knattox","Vrombi",9,["steel","poison"]],["Revavroom","Knattatox","Vrombotor",9,["steel","poison"]],["Cyclizar","Mopex","Motorizard",9,["dragon","normal"]],["Orthworm","Schlurm","Ferdeter",9,["steel"]],["Glimmet","Lumispross","Germéclat",9,["rock","poison"]],["Glimmora","Lumiflora","Floréclat",9,["rock","poison"]],["Greavard","Gruff","Toutombe",9,["ghost"]],["Houndstone","Friedwuff","Tomberro",9,["ghost"]],["Flamigo","Flaminkno","Flamenroule",9,["flying","fighting"]],["Cetoddle","Flaniwal","Piétacé",9,["ice"]],["Cetitan","Kolowal","Balbalèze",9,["ice"]],["Veluza","Agiluza","Délestin",9,["water","psychic"]],["Dondozo","Heerashai","Oyacata",9,["water"]],["Tatsugiri","Nigiragi","Nigirigon",9,["dragon","water"]],["Annihilape","Epitaff","Courrousinge",9,["fighting","ghost"]],["Clodsire","Suelord","Terraiste",9,["poison","ground"]],["Farigiraf",0,0,9,["normal","psychic"]],["Dudunsparce","Dummimisel","Deusolourdo",9,["normal"]],["Kingambit","Gladimperio","Scalpereur",9,["dark","steel"]],["Great Tusk","Riesenzahn","Fort-Ivoire",9,["ground","fighting"]],["Scream Tail","Brüllschweif","Hurle-Queue",9,["fairy","psychic"]],["Brute Bonnet","Wutpilz","Fongus-Furie",9,["grass","dark"]],["Flutter Mane","Flatterhaar","Flotte-Mèche",9,["ghost","fairy"]],["Slither Wing","Kriechflügel","Rampe-Ailes",9,["bug","fighting"]],["Sandy Shocks","Sandfell","Pelage-Sablé",9,["electric","ground"]],["Iron Treads","Eisenrad","Roue-de-Fer",9,["ground","steel"]],["Iron Bundle","Eisenbündel","Hotte-de-Fer",9,["ice","water"]],["Iron Hands","Eisenhand","Paume-de-Fer",9,["fighting","electric"]],["Iron Jugulis","Eisenhals","Têtes-de-Fer",9,["dark","flying"]],["Iron Moth","Eisenfalter","Mite-de-Fer",9,["fire","poison"]],["Iron Thorns","Eisendorn","Épine-de-Fer",9,["rock","electric"]],["Frigibax","Frospino","Frigodo",9,["dragon","ice"]],["Arctibax","Cryospino","Cryodo",9,["dragon","ice"]],["Baxcalibur","Espinodon","Glaivodo",9,["dragon","ice"]],["Gimmighoul","Gierspenst","Mordudor",9,["ghost"]],["Gholdengo","Monetigo","Gromago",9,["steel","ghost"]],["Wo-Chien","Chongjian","Chongjian",9,["dark","grass"]],["Chien-Pao","Baojian","Baojian",9,["dark","ice"]],["Ting-Lu","Dinglu","Dinglu",9,["dark","ground"]],["Chi-Yu","Yuyu","Yuyu",9,["dark","fire"]],["Roaring Moon","Donnersichel","Rugit-Lune",9,["dragon","dark"]],["Iron Valiant","Eisenkrieger","Garde-de-Fer",9,["fairy","fighting"]],["Koraidon",0,0,9,["fighting","dragon"]],["Miraidon",0,0,9,["electric","dragon"]],["Walking Wake","Windewoge","Serpente-Eau",9,["water","dragon"]],["Iron Leaves","Eisenblatt","Vert-de-Fer",9,["grass","psychic"]],["Dipplin","Sirapfel","Pomdramour",9,["grass","dragon"]],["Poltchageist","Mortcha",0,9,["grass","ghost"]],["Sinistcha","Fatalitcha","Théffroyable",9,["grass","ghost"]],["Okidogi","Boninu","Félicanis",9,["poison","fighting"]],["Munkidori","Benesaru","Fortusimia",9,["poison","psychic"]],["Fezandipiti","Beatori","Favianos",9,["poison","fairy"]],["Ogerpon",0,0,9,["grass"]],["Archaludon","Briduradon","Pondralugon",9,["steel","dragon"]],["Hydrapple","Hydrapfel","Pomdorochi",9,["grass","dragon"]],["Gouging Fire","Keilflamme","Feu-Perçant",9,["fire","dragon"]],["Raging Bolt","Furienblitz","Ire-Foudre",9,["electric","dragon"]],["Iron Boulder","Eisenfels","Roc-de-Fer",9,["rock","psychic"]],["Iron Crown","Eisenhaupt","Chef-de-Fer",9,["steel","psychic"]],["Terapagos",0,0,9,["normal"]],["Pecharunt","Infamomo","Pêchaminus",9,["poison","ghost"]]];
+const REGIONS = ["Kanto","Johto","Hoenn","Sinnoh","Unova","Kalos","Alola","Galar","Paldea"];
+const REGION_COL = ["#e8622c","#3fa34d","#3f7fe0","#9443a8","#5a4a40","#d67ab0","#e0b31a","#b8392e","#4fb8c4"];
+const TYPE = {normal:"#9a9a7c",fire:"#e8622c",water:"#3f7fe0",electric:"#e0b31a",grass:"#3fa34d",ice:"#4fb8c4",
+  fighting:"#b8392e",poison:"#9443a8",ground:"#c49a45",flying:"#7f8fe0",psychic:"#e64f86",bug:"#8aa224",
+  rock:"#a8913c",ghost:"#5d4b9a",dragon:"#5b3fd8",dark:"#5a4a40",steel:"#7f8aa0",fairy:"#d67ab0"};
+const TYPE_NL = {normal:"Normaal",fire:"Vuur",water:"Water",electric:"Elektrisch",grass:"Gras",ice:"IJs",fighting:"Vecht",poison:"Gif",
+  ground:"Grond",flying:"Vlieg",psychic:"Psychisch",bug:"Insect",rock:"Steen",ghost:"Spook",dragon:"Draak",dark:"Duister",steel:"Staal",fairy:"Fee"};
+const ICON = {
+ normal:'<circle cx="12" cy="12" r="7"/>',
+ fire:'<path d="M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-4-1-6 1-9z"/>',
+ water:'<path d="M12 2C9 7 6 10 6 14a6 6 0 0 0 12 0c0-4-3-7-6-12z"/>',
+ electric:'<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/>',
+ grass:'<path d="M4 20c0-10 6-16 16-16 0 10-6 16-16 16z"/>',
+ ice:'<path d="M12 2l2 6 6-2-4 5 4 5-6-2-2 6-2-6-6 2 4-5-4-5 6 2z"/>',
+ fighting:'<path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/>',
+ poison:'<circle cx="10" cy="14" r="5"/><circle cx="16.5" cy="7" r="3"/><circle cx="18" cy="16.5" r="2"/>',
+ ground:'<path d="M2 20 9 7l4 6 3-4 6 11z"/>',
+ flying:'<path d="M3 14c4-8 10-10 18-10-2 4-5 6-9 7 3 0 5 1 7 2-5 3-11 4-16 1z"/>',
+ psychic:'<path fill-rule="evenodd" d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zm10 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>',
+ bug:'<ellipse cx="12" cy="14" rx="6" ry="7"/><circle cx="8" cy="4.5" r="1.8"/><circle cx="16" cy="4.5" r="1.8"/>',
+ rock:'<path d="M7 4h8l5 6-3 10H7L3 11z"/>',
+ ghost:'<path d="M5 21V11a7 7 0 0 1 14 0v10l-2.3-2-2.3 2-2.4-2-2.4 2-2.3-2z"/>',
+ dragon:'<path d="M4 4c6 2 10 7 11 16l-3-2c-1-6-4-10-8-14zm6-1c5 2 9 6 10 12l-2-1c-1-4-4-8-8-11z"/>',
+ dark:'<path d="M15 3a9 9 0 1 0 6 13A8 8 0 0 1 15 3z"/>',
+ steel:'<path fill-rule="evenodd" d="M12 2l8.7 5v10L12 22l-8.7-5V7zm0 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>',
+ fairy:'<path d="M12 2c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10z"/>'};
+function icon(t){ const s = document.createElementNS("http://www.w3.org/2000/svg","svg"); s.setAttribute("viewBox","0 0 24 24"); s.setAttribute("class","ti"); s.setAttribute("aria-hidden","true"); s.innerHTML = ICON[t]||ICON.normal; return s; }
+const DEFAULT_SOORTEN = ["Gewoon","ex","EX","GX","V","VMAX","VSTAR","Mega","Anders"];
+const AFWERKING = ["Normaal","Holo","Reverse holo"];
+const ZELD = {"":"Geen", IR:"Illustration rare", SIR:"Special illustration rare"};
+const LS_KEY = "tijmen-verzamelboek-v1", LS_BACKUP = "tijmen-verzamelboek-laatste-backup", LS_AUTH = "verzamelboek-auth";
+const AUTH_HASH = "5b501ff89a937bbf849d15d55ea2da6895d64f75787d13e9166a1333449fc8d0";
+const API = "https://api.tcgdex.net/v2/en";
+const IMG_OK = /^https:\/\/assets\.tcgdex\.net\/[A-Za-z0-9._\/-]+$/;
+const RANKS = [[0,"Beginnende verzamelaar"],[25,"Verzamelaar"],[100,"Ervaren verzamelaar"],[250,"Expert-verzamelaar"],[500,"Meesterverzamelaar"],[1000,"Bijna-legende"],[1025,"Legende"]];
+const MILESTONES = [10,25,50,75,100,150,200,250,300,400,500,600,700,800,900,1000,1025];
+
+// kaarten: { "25": { "ex|Holo|sv08-57|SIR": 1 } }   img/meta per kaart-id, cover per Pokémon
+let state = blank();
+let region = 0, view = "boek";
+function blank(){ return {v:3, owner:"", soorten:[...DEFAULT_SOORTEN], kaarten:{}, img:{}, meta:{}, cover:{}}; }
+
+/* ---------- opslag ---------- */
+const keyOf = (s,f,cid,z) => [s,f,cid||"",z||""].join("|");
+const parseKey = k => { const [s,f,cid,z] = k.split("|"); return {s:s||"Gewoon", f:f||"Normaal", cid:cid||"", z:(z==="IR"||z==="SIR")?z:""}; };
+function norm(o){
+  const c = JSON.parse(JSON.stringify(o || {}));
+  const kaarten = {};
+  for(const [n,m] of Object.entries(c.kaarten || {})){
+    const nn = parseInt(n,10); if(!(nn>=1 && nn<=1025) || !m || typeof m!=="object") continue;
+    const mm = {};
+    for(const [k,v] of Object.entries(m)){ const x = Math.floor(Number(v)); if(!(x>0) || typeof k!=="string") continue;
+      const p = parseKey(k); const nk = keyOf(p.s,p.f,p.cid,p.z); mm[nk] = (mm[nk]||0) + x; }
+    if(Object.keys(mm).length) kaarten[nn] = mm;
+  }
+  const img = {}; for(const [k,v] of Object.entries(c.img || {})){ if(typeof v==="string" && IMG_OK.test(v)) img[k] = v; }
+  const meta = {}; for(const [k,v] of Object.entries(c.meta || {})){ if(v && typeof v==="object") meta[k] = {r:String(v.r||"").slice(0,60), set:String(v.set||"").slice(0,80), setId:String(v.setId||"").slice(0,40)}; }
+  const cover = {}; for(const [k,v] of Object.entries(c.cover || {})){ if(typeof v==="string") cover[k] = v; }
+  const soorten = Array.isArray(c.soorten) && c.soorten.length ? c.soorten.filter(s=>typeof s==="string" && s && !s.includes("|")).slice(0,40) : [...DEFAULT_SOORTEN];
+  if(!soorten.includes("Gewoon")) soorten.unshift("Gewoon");
+  return {v:3, owner: typeof c.owner==="string" ? c.owner.slice(0,24) : "", soorten, kaarten, img, meta, cover};
+}
+function loadLocal(){ try{ const s = localStorage.getItem(LS_KEY); if(s) state = norm(JSON.parse(s)); }catch(e){} }
+function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); setStatus("Bewaard op dit apparaat."); }catch(e){ setStatus("Opslaan lukt niet op dit apparaat. Maak een back-up."); } }
+function setStatus(t){ document.getElementById("status").textContent = t; }
+
+/* ---------- helpers ---------- */
+const el = (t, a={}, ...k) => { const e = document.createElement(t); for(const [x,y] of Object.entries(a)){ if(y==null) continue; if(x==="style") e.style.cssText=y; else if(x.startsWith("on")) e.addEventListener(x.slice(2), y); else e.setAttribute(x,y);} for(const c of k){ if(c==null) continue; e.append(c.nodeType?c:document.createTextNode(c)); } return e; };
+const pad = n => "#" + String(n).padStart(3,"0");
+const nameOf = n => DEX[n-1][0];
+const types = n => DEX[n-1][4];
+const total = n => { const m = state.kaarten[n]; if(!m) return 0; let s=0; for(const v of Object.values(m)) s+=v; return s; };
+const has = n => total(n) > 0;
+const fold = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const SEARCH = DEX.map((d,i) => ({n:i+1, keys:[d[0],d[1]||"",d[2]||""].filter(Boolean).map(fold)}));
+const imgSmall = cid => state.img[cid] ? state.img[cid] + "/low.webp" : "";
+function colorVars(e, n){ const t = types(n); e.style.setProperty("--t1", TYPE[t[0]]||"#888"); e.style.setProperty("--t2", t[1] ? TYPE[t[1]] : shade(TYPE[t[0]]||"#888")); }
+function shade(h){ const n = parseInt(h.slice(1),16); const f = c => Math.max(0,Math.round(c*0.68)); return "#" + [n>>16,(n>>8)&255,n&255].map(c=>f(c).toString(16).padStart(2,"0")).join(""); }
+function possessive(name){ const n = name.trim(); if(!n) return "Verzamelboek"; if(/[sxz]$/i.test(n)) return n + "' verzamelboek"; if(/[aeiouyé]$/i.test(n)) return n + "'s verzamelboek"; return n + "s verzamelboek"; }
+function describe(p){ return p.s + (p.f!=="Normaal" ? " · " + p.f : "") + (p.z ? " · " + p.z : ""); }
+function inRegion(n){ return region===0 || DEX[n-1][3]===region; }
+function rarityToZ(r){ if(/special\s*illustration/i.test(r||"")) return "SIR"; if(/illustration\s*rare/i.test(r||"")) return "IR"; return ""; }
+function coverOf(n){
+  const m = state.kaarten[n] || {}; const cids = [];
+  for(const k of Object.keys(m)){ const p = parseKey(k); if(p.cid && state.img[p.cid]) cids.push(p); }
+  if(!cids.length) return null;
+  const want = state.cover[n]; return cids.find(p=>p.cid===want) || cids[0];
+}
+function specials(n){ const m = state.kaarten[n]||{}; const out = new Set(); let shine=false, z = "";
+  for(const k of Object.keys(m)){ const p = parseKey(k); if(p.s!=="Gewoon") out.add(p.s); if(p.f!=="Normaal") shine=true; if(p.z==="SIR" || (p.z==="IR" && z!=="SIR")) z = p.z; }
+  return {list:[...out], shine, z}; }
+
+/* soort afleiden uit de kaartnaam */
+function detectSoort(name){
+  let s = "Gewoon";
+  if(/^(M|Mega)\s/.test(name)) s = "Mega";
+  else if(/\bVMAX\b/.test(name)) s = "VMAX";
+  else if(/\bVSTAR\b/.test(name)) s = "VSTAR";
+  else if(/\sV(-UNION)?$/.test(name) || /\sV\s/.test(name)) s = "V";
+  else if(/[\s-]GX\b/.test(name)) s = "GX";
+  else if(/[\s-]EX\b/.test(name)) s = "EX";
+  else if(/\sex\b/.test(name)) s = "ex";
+  return state.soorten.includes(s) ? s : (state.soorten.includes("Anders") ? "Anders" : "Gewoon");
+}
+
+/* ---------- TCGdex ---------- */
+const cardCache = {}, metaWait = {};
+const escRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+async function getJSON(u){ const r = await fetch(u); if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); }
+async function loadCards(n){
+  if(cardCache[n]) return cardCache[n];
+  const en = nameOf(n);
+  const [byDex, byName] = await Promise.allSettled([ getJSON(API + "/cards?dexId=eq:" + n), getJSON(API + "/cards?name=" + encodeURIComponent(en)) ]);
+  if(byDex.status==="rejected" && byName.status==="rejected") throw byName.reason;
+  const re = new RegExp("(^|[^A-Za-z])" + escRe(en) + "($|[^A-Za-z])", "i");
+  const map = new Map();
+  if(byDex.status==="fulfilled" && Array.isArray(byDex.value)) byDex.value.forEach(c => { if(c && c.id) map.set(c.id, c); });
+  if(byName.status==="fulfilled" && Array.isArray(byName.value)) byName.value.forEach(c => { if(c && c.id && re.test(c.name||"")) map.set(c.id, c); });
+  const list = [...map.values()].filter(c => typeof c.image==="string" && IMG_OK.test(c.image)).reverse();
+  cardCache[n] = list; return list;
+}
+/* details (zeldzaamheid + set) van één kaart; wordt bewaard zodat het overzicht ermee kan rekenen */
+function fetchMeta(cid){
+  if(state.meta[cid]) return Promise.resolve(state.meta[cid]);
+  if(metaWait[cid]) return metaWait[cid];
+  metaWait[cid] = getJSON(API + "/cards/" + encodeURIComponent(cid)).then(c => {
+    const m = {r: String(c && c.rarity || "").slice(0,60), set: String(c && c.set && c.set.name || "").slice(0,80), setId: String(c && c.set && c.set.id || "").slice(0,40)};
+    state.meta[cid] = m; save(); return m;
+  }).finally(() => { delete metaWait[cid]; });
+  return metaWait[cid];
+}
+async function backfillMeta(){
+  const todo = new Set();
+  for(const m of Object.values(state.kaarten)) for(const k of Object.keys(m)){ const p = parseKey(k); if(p.cid && !state.meta[p.cid]) todo.add(p.cid); }
+  let changed = false;
+  for(const cid of todo){
+    try{ const meta = await fetchMeta(cid); changed = true;
+      // zeldzaamheid alsnog invullen bij kaarten waar die nog leeg was
+      const z = rarityToZ(meta.r);
+      if(z) for(const [n,m] of Object.entries(state.kaarten)) for(const [k,v] of Object.entries({...m})){ const p = parseKey(k); if(p.cid===cid && !p.z){ delete m[k]; const nk = keyOf(p.s,p.f,p.cid,z); m[nk] = (m[nk]||0) + v; } }
+    }catch(e){ break; }
+    await new Promise(r => setTimeout(r, 150));
+  }
+  if(changed){ save(); renderAll(); }
+}
+
+/* ---------- kop + regio's ---------- */
+function rankOf(c){ let r = RANKS[0][1]; for(const [min,name] of RANKS) if(c>=min) r = name; return r; }
+function renderHead(){
+  let c=0; for(let n=1;n<=1025;n++) if(has(n)) c++;
+  document.getElementById("cnt").textContent = c;
+  document.getElementById("bar").style.width = (c/1025*100).toFixed(2) + "%";
+  document.getElementById("barWrap").setAttribute("aria-valuenow", c);
+  document.getElementById("rankName").textContent = rankOf(c);
+  const next = MILESTONES.find(m => m > c);
+  document.getElementById("rankNext").textContent = next ? "Nog " + (next-c) + " tot " + next + "!" : "Alles gevangen!";
+  const title = possessive(state.owner);
+  document.getElementById("title").textContent = title; document.title = title;
+  const wrap = document.getElementById("regions"); wrap.innerHTML = "";
+  const mk = (idx, label, got, all) => { const pct = all ? got/all*100 : 0;
+    const tier = pct>=100 ? ["#ffcb3d","#d99a0b"] : pct>=50 ? ["#c9d2e6","#8a95b3"] : pct>=20 ? ["#e09a5c","#a8622a"] : ["#6c78b8","#3a4690"];
+    const m = el("span",{class:"medal",style:"--p:"+pct.toFixed(1)+";--mc:"+tier[0]+";--mi:"+tier[1]}, el("span",{}, pct>=100 ? "★" : Math.floor(pct)+"%"));
+    return el("button",{class:"reg press","aria-pressed":String(region===idx),onclick:()=>{region=idx; renderAll();}}, m, el("span",{}, el("strong",{},label), el("em",{}, got + " / " + all))); };
+  wrap.append(mk(0,"Alles",c,1025));
+  REGIONS.forEach((r,i) => { let a=0,g=0; DEX.forEach((d,j)=>{ if(d[3]===i+1){a++; if(has(j+1)) g++;} }); wrap.append(mk(i+1,r,g,a)); });
+}
+
+/* ---------- boek ---------- */
+function slot(n){
+  if(!has(n)){
+    return el("button",{class:"slot back","data-n":n,"aria-label":nameOf(n)+", nog niet",onclick:()=>openPanel(n)},
+      el("span",{class:"q"}, el("b",{},"?")), el("span",{class:"no"}, pad(n)), el("span",{class:"nm"}, nameOf(n)));
+  }
+  const sp = specials(n), tags = el("span",{class:"tags"});
+  if(sp.z) tags.append(el("span",{class:"tag " + sp.z.toLowerCase()}, sp.z));
+  sp.list.slice(0,3).forEach(s => tags.append(el("span",{class:"tag"}, s)));
+  if(sp.list.length>3) tags.append(el("span",{class:"tag"}, "+" + (sp.list.length-3)));
+  const cnt = total(n)>1 ? el("span",{class:"tag cnt"}, "×" + total(n)) : null;
+  const cv = coverOf(n);
+  if(cv){
+    const img = el("img",{src:imgSmall(cv.cid),alt:"",loading:"lazy",decoding:"async"});
+    img.addEventListener("error", () => img.remove());
+    const b = el("button",{class:"slot photo"+(cv.f!=="Normaal"?" shine":""),"data-n":n,"aria-label":nameOf(n)+", "+total(n)+" kaarten",onclick:()=>openPanel(n)}, img, tags, cnt);
+    colorVars(b,n); return b;
+  }
+  const t = types(n);
+  const ics = el("span",{class:"ics"}); t.forEach(x => { const c = el("span",{style:"background:"+TYPE[x]}); c.append(icon(x)); ics.append(c); });
+  const art = el("span",{class:"art"}); art.append(icon(t[0]));
+  const b = el("button",{class:"slot has"+(sp.shine?" shine":""),"data-n":n,"aria-label":nameOf(n)+", "+total(n)+" kaarten",onclick:()=>openPanel(n)},
+    el("span",{class:"inner"}, el("span",{class:"row"}, pad(n), ics), art, el("span",{class:"nm"}, nameOf(n))), tags, cnt);
+  colorVars(b,n); return b;
+}
+function renderBoek(onlyMissing){
+  const root = document.getElementById(onlyMissing ? "v-mis" : "v-boek"); root.innerHTML = "";
+  if(onlyMissing){
+    root.append(el("h2",{},"Deze moet je nog vangen"));
+    root.append(el("p",{class:"hint"}, region ? "Kies hierboven een andere regio om verder te kijken." : "Tip: kies hierboven een regio, dan is de lijst korter."));
+  }
+  let any = false;
+  REGIONS.forEach((r,i) => {
+    const g = i+1; if(region && region!==g) return;
+    const nums = []; DEX.forEach((d,j)=>{ if(d[3]===g && (!onlyMissing || !has(j+1))) nums.push(j+1); });
+    if(!nums.length) return; any = true;
+    const all = DEX.filter(d=>d[3]===g).length, got = DEX.filter((d,j)=>d[3]===g && has(j+1)).length;
+    const grid = el("div",{class:"grid"}); nums.forEach(n => grid.append(slot(n)));
+    root.append(el("div",{class:"sheet",style:"--rc:"+REGION_COL[i]}, el("h3",{}, r, el("span",{}, onlyMissing ? "nog " + (all-got) + " te vangen" : got + " / " + all)), grid));
+  });
+  if(!any) root.append(el("p",{class:"empty"}, onlyMissing ? "Allemaal gevangen in deze regio! ★" : "Nog niks in deze regio."));
+}
+
+/* ---------- ruilen ---------- */
+function renderDub(){
+  const root = document.getElementById("v-dub"); root.innerHTML = "";
+  root.append(el("h2",{},"Ruilen"), el("p",{class:"hint"},"Hier heb je er meer dan één van. Eén houd je, de rest kun je ruilen."));
+  const list = []; for(let n=1;n<=1025;n++){ if(inRegion(n) && total(n)>1) list.push(n); }
+  if(!list.length){ root.append(el("p",{class:"empty"},"Nog geen dubbele kaarten.")); return; }
+  const box = el("div",{class:"duplist"});
+  list.forEach(n => {
+    const parts = Object.entries(state.kaarten[n]).map(([k,v]) => v + "× " + describe(parseKey(k)).replaceAll(" · "," "));
+    const sw = el("span",{class:"sw"}); const cv = coverOf(n);
+    if(cv) sw.append(el("img",{src:imgSmall(cv.cid),alt:"",loading:"lazy"})); else sw.append(icon(types(n)[0]));
+    const b = el("button",{class:"dup press",onclick:()=>openPanel(n)}, sw,
+      el("span",{}, el("span",{class:"nm"}, nameOf(n)), el("br"), el("span",{class:"sub"}, parts.join(", "))),
+      el("span",{class:"x"}, (total(n)-1) + " ruilen"));
+    colorVars(b,n); box.append(b);
+  });
+  root.append(box);
+}
+
+/* ---------- overzicht ---------- */
+function bars(title, rows, note, top){
+  const max = Math.max(1, ...rows.map(r=>r.v));
+  const c = el("div",{class:"card"}, el("h4",{}, title));
+  if(top) c.append(el("p",{class:"top1"}, top));
+  if(!rows.length){ c.append(el("p",{class:"note"}, "Nog niks om te laten zien.")); return c; }
+  rows.forEach(r => {
+    const ic = r.icon ? (() => { const s = el("span",{class:"ic",style:"background:"+r.color}); s.append(icon(r.icon)); return s; })() : null;
+    c.append(el("div",{class:"brow"}, el("span",{class:"lab"}, ic, el("span",{title:r.k}, r.k)),
+      el("span",{class:"tr"}, el("i",{style:"width:"+(r.v/max*100).toFixed(1)+"%;--bc:"+(r.color||"var(--night2)")})), el("span",{class:"v"}, r.v)));
+  });
+  if(note) c.append(el("p",{class:"note"}, note));
+  return c;
+}
+function renderStat(){
+  const root = document.getElementById("v-stat"); root.innerHTML = "";
+  root.append(el("h2",{},"Overzicht"), el("p",{class:"hint"}, region ? "Alleen " + REGIONS[region-1] + ". Kies \u2018Alles\u2019 hierboven voor de hele collectie." : "Waar heb je de meeste kaarten van?"));
+  let uniek=0, kaarten=0, dub=0; const perType={}, perSoort={}, perGlans={}, perZeld={}, perSet={}; let zonderSet = 0, metPlaatje = 0;
+  for(let n=1;n<=1025;n++){
+    if(!inRegion(n)) continue; const t = total(n); if(!t) continue;
+    uniek++; kaarten+=t; if(t>1) dub+=t-1;
+    types(n).forEach(x => perType[x] = (perType[x]||0) + 1);
+    for(const [k,v] of Object.entries(state.kaarten[n])){ const p = parseKey(k);
+      perSoort[p.s] = (perSoort[p.s]||0) + v; perGlans[p.f] = (perGlans[p.f]||0) + v;
+      const meta = p.cid ? state.meta[p.cid] : null;
+      const zr = meta && meta.r ? meta.r : (p.z ? ZELD[p.z] : "");
+      if(zr) perZeld[zr] = (perZeld[zr]||0) + v;
+      if(p.cid) metPlaatje += v;
+      if(meta && meta.set) perSet[meta.set] = (perSet[meta.set]||0) + v; else zonderSet += v;
+    }
+  }
+  const lead = (rows, one, many) => { if(!rows.length) return ""; const tops = rows.filter(r=>r.v===rows[0].v).map(r=>r.k);
+    return tops.length===1 ? one(tops[0]) : tops.length<=3 ? many(tops.slice(0,-1).join(", ") + " en " + tops[tops.length-1]) : ""; };
+  const sortRows = o => Object.entries(o).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v);
+  const s = el("div",{class:"stats"});
+  s.append(el("div",{class:"kpis"},
+    el("div",{class:"kpi"}, el("b",{}, uniek), el("span",{},"verschillende Pokémon")),
+    el("div",{class:"kpi"}, el("b",{}, kaarten), el("span",{},"kaarten in totaal")),
+    el("div",{class:"kpi"}, el("b",{}, dub), el("span",{},"om te ruilen")),
+    el("div",{class:"kpi"}, el("b",{}, metPlaatje), el("span",{},"met echte kaart erbij"))));
+  const tRows = sortRows(perType).map(r => ({k:TYPE_NL[r.k]||r.k, v:r.v, color:TYPE[r.k], icon:r.k}));
+  s.append(bars("Per type", tRows, "Aantal verschillende Pokémon per type. Een Pokémon met twee types telt bij allebei.", lead(tRows, k=>"Je hebt de meeste " + k + "-Pokémon!", k=>"Gelijkspel tussen " + k + ".")));
+  const setRows = sortRows(perSet).slice(0,12);
+  s.append(bars("Per set", setRows.map(r=>({...r,color:"var(--pink)"})), zonderSet ? zonderSet + (zonderSet===1?" kaart is":" kaarten zijn") + " ingevoerd zonder echte kaart, daarvan is de set niet bekend." : "", lead(setRows, k=>"Je meeste kaarten komen uit " + k + ".", k=>"Gelijkspel tussen " + k + ".")));
+  s.append(bars("Per soort", sortRows(perSoort).map(r=>({...r,color:"var(--night2)"}))));
+  s.append(bars("Zeldzaamheid", sortRows(perZeld).map(r=>({...r,color:/special/i.test(r.k)?"#b48cff":/illustration/i.test(r.k)?"#f2a900":"var(--cyan)"})), "Van kaarten met een echte kaart erbij weet de app de zeldzaamheid. Bij de rest alleen als je IR of SIR zelf hebt aangegeven."));
+  s.append(bars("Glans", sortRows(perGlans).map(r=>({...r,color:r.k==="Normaal"?"var(--line)":"#b48cff"}))));
+  if(!region){
+    const rr = REGIONS.map((r,i)=>{ let g=0; DEX.forEach((d,j)=>{ if(d[3]===i+1 && has(j+1)) g++; }); return {k:r,v:g,color:REGION_COL[i]}; });
+    s.append(bars("Per regio", rr));
+  }
+  root.append(s);
+}
+
+/* ---------- zoeken ---------- */
+function renderResults(){
+  const q = fold(document.getElementById("q").value || ""); const root = document.getElementById("results"); root.innerHTML = "";
+  if(!q){ root.append(el("p",{class:"empty"},"Typ de naam van de Pokémon op je kaart. Duitse en Franse namen werken ook.")); return; }
+  const num = /^\d+$/.test(q) ? parseInt(q,10) : 0;
+  const hits = [];
+  SEARCH.forEach(s => { let score = 0;
+    if(num && s.n===num) score = 3;
+    for(const k of s.keys){ if(k.startsWith(q)) score = Math.max(score,2); else if(q.length>2 && k.includes(q)) score = Math.max(score,1); }
+    if(score) hits.push([score,s.n]); });
+  hits.sort((a,b)=> b[0]-a[0] || a[1]-b[1]);
+  if(!hits.length){ root.append(el("p",{class:"empty"},"Geen Pokémon gevonden. Kijk of de naam goed gespeld is.")); return; }
+  hits.slice(0,12).forEach(([,n]) => {
+    const d = DEX[n-1], alt = [d[1],d[2]].filter(Boolean).join(" · ");
+    const dot = el("span",{class:"dot"}); dot.append(icon(types(n)[0]));
+    const b = el("button",{class:"res press",onclick:()=>openPanel(n,true)}, dot, nameOf(n), has(n) ? el("span",{class:"own"}, "×" + total(n)) : null, el("small",{}, pad(n), alt?el("br"):null, alt||null));
+    colorVars(b,n); root.append(b);
+  });
+}
+
+/* ---------- paneel: kaart erbij ---------- */
+let pick, panelN = 0, fromSearch = false, soortTouched = false, newOpen = false, panelMode = "";
+let cardsState = {n:0, status:"idle", list:[]};
+function resetPick(){ pick = {s:"Gewoon", f:"Normaal", cid:"", img:"", z:"", meta:null}; }
+resetPick();
+function openPanel(n, search){
+  document.getElementById("toast").classList.remove("show");
+  panelMode = "kaart"; newOpen = false; soortTouched = false; panelN = n; fromSearch = !!search; resetPick();
+  renderPanel(); document.getElementById("scrim").hidden = false; document.getElementById("panel").scrollTop = 0;
+  if(cardsState.n!==n || cardsState.status==="error"){
+    cardsState = {n, status:"loading", list:[]};
+    loadCards(n).then(list => { if(cardsState.n===n){ cardsState = {n, status:"ok", list}; if(panelN===n) renderCards(); } })
+                .catch(() => { if(cardsState.n===n){ cardsState = {n, status:"error", list:[]}; if(panelN===n) renderCards(); } });
+  }
+}
+function closePanel(){ document.getElementById("scrim").hidden = true; panelN = 0; panelMode = ""; if(fromSearch && view==="erbij") document.getElementById("q").focus(); }
+function ownedCids(n){ const s = new Set(); for(const k of Object.keys(state.kaarten[n]||{})){ const p = parseKey(k); if(p.cid) s.add(p.cid); } return s; }
+function choose(c){
+  if(pick.cid===c.id){ resetPick(); renderPanel(); return; }
+  pick.cid = c.id; pick.img = c.image; pick.s = detectSoort(c.name); pick.meta = state.meta[c.id] || null; pick.z = pick.meta ? rarityToZ(pick.meta.r) : "";
+  renderPanel();
+  if(!pick.meta){ const want = c.id; fetchMeta(want).then(m => { if(pick.cid===want){ pick.meta = m; pick.z = rarityToZ(m.r); if(panelN) renderPanel(); } }).catch(()=>{}); }
+}
+function renderCards(){
+  const box = document.getElementById("cardsBox"); if(!box) return; box.innerHTML = "";
+  if(cardsState.status==="loading"){ box.append(el("div",{class:"loading"},"Kaarten laden…")); return; }
+  if(cardsState.status==="error"){ box.append(el("div",{class:"cerr"},"Kaarten laden lukt nu niet. Geen internet? Je kunt hem ook zonder plaatje toevoegen.")); return; }
+  const list = soortTouched ? cardsState.list.filter(c => detectSoort(c.name)===pick.s) : cardsState.list;
+  if(!list.length){ box.append(el("div",{class:"cerr"}, cardsState.list.length ? "Geen kaarten van deze soort gevonden. Kies een andere soort of voeg hem zonder plaatje toe." : "Geen kaarten met plaatje gevonden. Voeg hem zonder plaatje toe.")); return; }
+  box.append(el("div",{class:"meta"}, el("span",{}, soortTouched ? list.length + " " + pick.s + "-kaarten" : list.length + " kaarten gevonden"), el("span",{}, "tik op jouw kaart")));
+  const mine = ownedCids(panelN);
+  const g = el("div",{class:"cgrid"});
+  list.forEach(c => {
+    const img = el("img",{src:c.image + "/low.webp",alt:c.name,loading:"lazy",decoding:"async"});
+    const btn = el("button",{class:"cpick"+(mine.has(c.id)?" mine":""),"aria-pressed":String(pick.cid===c.id),"aria-label":c.name + " " + c.id,onclick:()=>choose(c)}, img);
+    img.addEventListener("error", () => { img.remove(); btn.append(el("span",{class:"noimg"}, c.name)); });
+    g.append(btn);
+  });
+  box.append(g);
+  if(pick.cid){
+    const m = pick.meta;
+    box.append(el("div",{class:"cinfo"}, m ? el("span",{}, el("b",{}, m.set || pick.cid), m.r ? " · " + m.r : "") : "Kaartgegevens ophalen…"));
+  }
+}
+function renderPanel(){
+  if(panelMode==="backup") return renderSettings();
+  if(panelMode==="owner") return renderOwner();
+  const n = panelN, p = document.getElementById("panel");
+  const gOld = document.querySelector("#cardsBox .cgrid"), keepScroll = gOld ? gOld.scrollTop : 0, panelScroll = p.scrollTop;
+  p.innerHTML = "";
+  const badge = el("div",{class:"badge"}); badge.append(icon(types(n)[0]));
+  const head = el("div",{class:"phead"}, badge,
+    el("div",{}, el("h3",{}, nameOf(n)), el("p",{}, pad(n) + " uit " + REGIONS[DEX[n-1][3]-1] + ", " + (total(n) ? total(n) + " in je boek" : "nog niet gevangen"))),
+    el("button",{class:"close press","aria-label":"Sluiten",onclick:closePanel},"×"));
+  colorVars(head,n); p.append(head);
+
+  const left = el("div",{}, el("p",{class:"label"},"Welke kaart is het?"), el("div",{class:"cardsbox",id:"cardsBox"}));
+  const right = el("div",{});
+  right.append(el("p",{class:"label"}, pick.cid ? "Soort (al ingevuld)" : "Wat voor kaart?"));
+  const c1 = el("div",{class:"chips"});
+  state.soorten.forEach(s => c1.append(el("button",{class:"chip press","aria-pressed":String(pick.s===s),onclick:()=>{ pick.s=s; soortTouched = true; if(pick.cid){ const c = cardsState.list.find(c=>c.id===pick.cid); if(c && detectSoort(c.name)!==s) resetPick(), pick.s = s; } renderPanel(); }}, s)));
+  c1.append(el("button",{class:"chip add press",onclick:()=>{ newOpen = true; renderPanel(); const i = document.getElementById("newSoort"); if(i) i.focus(); }},"+ nieuw"));
+  right.append(c1);
+  if(newOpen){
+    const inp = el("input",{id:"newSoort",class:"newin",maxlength:"16",placeholder:"Bijv. Radiant of Tera","aria-label":"Naam nieuwe soort"});
+    inp.addEventListener("keydown", e => { if(e.key==="Enter") saveSoort(); });
+    right.append(el("div",{class:"newrow"}, inp, el("button",{class:"chip",onclick:saveSoort},"Bewaar")));
+  }
+  right.append(el("p",{class:"label"}, pick.cid && pick.meta ? "Zeldzaamheid (al ingevuld)" : "Zeldzaamheid"));
+  const cz = el("div",{class:"chips"});
+  Object.entries(ZELD).forEach(([z,lab]) => cz.append(el("button",{class:"chip press"+(z?" holo":""),"aria-pressed":String(pick.z===z),onclick:()=>{pick.z=z; renderPanel();}}, z || lab)));
+  right.append(cz, el("p",{class:"label"},"Glimt hij?"));
+  const c2 = el("div",{class:"chips"});
+  AFWERKING.forEach(f => c2.append(el("button",{class:"chip press"+(f!=="Normaal"?" holo":""),"aria-pressed":String(pick.f===f),onclick:()=>{pick.f=f; renderPanel();}}, f)));
+  right.append(c2, el("button",{class:"big",onclick:()=>add(n,pick.s,pick.f,1,false,pick.cid,pick.img,pick.z)}, pick.cid ? "Deze kaart erbij" : "Kaart erbij"));
+
+  const m = state.kaarten[n];
+  if(m && Object.keys(m).length){
+    right.append(el("p",{class:"label"},"Al in je boek"));
+    const box = el("div",{class:"owned"});
+    const withImg = Object.keys(m).map(parseKey).filter(p=>p.cid && state.img[p.cid]);
+    const cv = coverOf(n);
+    Object.entries(m).forEach(([k,v]) => { const pk = parseKey(k);
+      const th = pk.cid && state.img[pk.cid] ? el("img",{class:"thumb",src:imgSmall(pk.cid),alt:""}) : null;
+      const meta = pk.cid ? state.meta[pk.cid] : null;
+      const coverBtn = th && withImg.length>1 ? el("button",{class:"cover press","aria-pressed":String(cv && cv.cid===pk.cid),"aria-label":"Gebruik als voorkant in het boek",title:"Voorkant in het boek",onclick:()=>{ state.cover[n] = pk.cid; save(); renderAll(); renderPanel(); }}, cv && cv.cid===pk.cid ? "★" : "☆") : null;
+      box.append(el("div",{class:"own"}, th, el("span",{class:"what"}, describe(pk), meta && meta.set ? el("small",{}, meta.set) : null),
+        coverBtn,
+        el("button",{class:"step press","aria-label":"Eén minder",onclick:()=>add(n,pk.s,pk.f,-1,true,pk.cid,"",pk.z)},"−"),
+        el("span",{class:"n"}, v),
+        el("button",{class:"step press","aria-label":"Eén meer",onclick:()=>add(n,pk.s,pk.f,1,true,pk.cid,"",pk.z)},"+"))); });
+    right.append(box);
+    if(withImg.length>1) right.append(el("p",{class:"hint",style:"margin-top:8px"},"Tik op de ster om te kiezen welke kaart voorop staat in het boek."));
+  }
+  p.append(el("div",{class:"pcols"}, left, right));
+  renderCards();
+  const g = document.querySelector("#cardsBox .cgrid"); if(g) g.scrollTop = keepScroll;
+  p.scrollTop = panelScroll;
+}
+function saveSoort(){
+  const i = document.getElementById("newSoort"); const s = (i ? i.value : "").trim().slice(0,16);
+  newOpen = false;
+  if(s && !s.includes("|")){ if(!state.soorten.includes(s)){ state.soorten.splice(Math.max(1,state.soorten.length-1), 0, s); save(); } pick.s = s; }
+  renderPanel();
+}
+
+/* ---------- naam + instellingen ---------- */
+function openOwner(){ panelMode = "owner"; panelN = 0; renderOwner(); document.getElementById("scrim").hidden = false; setTimeout(()=>{ const i = document.getElementById("ownerIn"); if(i) i.focus(); }, 60); }
+function renderOwner(){
+  const p = document.getElementById("panel"); p.innerHTML = "";
+  const inp = el("input",{id:"ownerIn",class:"field",maxlength:"24",placeholder:"Bijvoorbeeld Tijmen",value:state.owner||"","aria-label":"Naam"});
+  const go = () => { const v = inp.value.trim().slice(0,24); if(!v){ inp.focus(); return; } state.owner = v; save(); renderHead(); closePanel(); };
+  inp.addEventListener("keydown", e => { if(e.key==="Enter") go(); });
+  p.append(el("div",{class:"phead",style:"--t1:#2a2f86;--t2:#161c4a"}, el("div",{}, el("h3",{},"Van wie is dit boek?"), el("p",{},"De naam komt bovenaan in de titel."))),
+    el("div",{class:"bk"}, el("p",{class:"label"},"Naam"), inp, el("button",{class:"big press",onclick:go},"Opslaan")));
+}
+function openSettings(){ panelMode = "backup"; panelN = 0; renderSettings(); document.getElementById("scrim").hidden = false; }
+function renderSettings(){
+  const p = document.getElementById("panel"); p.innerHTML = "";
+  let last = ""; try{ last = localStorage.getItem(LS_BACKUP) || ""; }catch(e){}
+  p.append(el("div",{class:"phead",style:"--t1:#2a2f86;--t2:#161c4a"}, el("div",{}, el("h3",{},"Instellingen"), el("p",{}, last ? "Laatste back-up: " + new Date(last).toLocaleDateString("nl-NL") : "Nog geen back-up gemaakt")),
+    el("button",{class:"close press","aria-label":"Sluiten",onclick:closePanel},"×")),
+    el("div",{class:"bk"},
+      el("p",{class:"label"},"Naam"), el("button",{class:"big alt press",onclick:openOwner}, state.owner ? "Naam wijzigen (" + state.owner + ")" : "Naam instellen"),
+      el("p",{class:"label"},"Back-up"),
+      el("p",{},"De collectie staat alleen in deze browser. Maak af en toe een back-up: wis je de browsergegevens, dan zet je hem daarmee terug."),
+      el("button",{class:"big press",onclick:exportData},"Back-up downloaden"),
+      el("p",{},"Terugzetten vervangt wat er nu in het boek staat. Hiermee neem je ook de collectie uit de Claude-versie over."),
+      el("button",{class:"big alt press",onclick:()=>document.getElementById("importFile").click()},"Back-up terugzetten"),
+      el("p",{class:"label"},"Account"),
+      el("button",{class:"big ghost press",onclick:logout},"Uitloggen op dit apparaat")));
+}
+function exportData(){
+  const now = new Date();
+  const data = JSON.stringify({app:"tijmens-verzamelboek", ...state, exported:now.toISOString()}, null, 2);
+  const url = URL.createObjectURL(new Blob([data], {type:"application/json"}));
+  const a = el("a",{href:url, download:"verzamelboek-" + now.toISOString().slice(0,10) + ".json"});
+  document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  try{ localStorage.setItem(LS_BACKUP, now.toISOString()); }catch(e){}
+  renderSettings(); last = null; toast("Back-up gedownload");
+}
+document.getElementById("importFile").addEventListener("change", async e => {
+  const f = e.target.files && e.target.files[0]; e.target.value = ""; if(!f) return;
+  try{
+    const o = JSON.parse(await f.text());
+    if(!o || typeof o.kaarten!=="object") throw new Error("geen collectie");
+    const nieuw = norm(o); if(!nieuw.owner) nieuw.owner = state.owner;
+    const c = Object.keys(nieuw.kaarten).length;
+    if(!confirm("Dit vervangt het huidige boek door de back-up met " + c + " Pokémon. Doorgaan?")) return;
+    state = nieuw; save(); closePanel(); renderAll(); last = null; toast("Back-up teruggezet: " + c + " Pokémon"); backfillMeta();
+  }catch(err){ last = null; toast("Dit bestand is geen back-up van het verzamelboek"); }
+});
+
+/* ---------- inlog ---------- */
+async function sha(s){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join(""); }
+function authed(){ try{ return localStorage.getItem(LS_AUTH)===AUTH_HASH || sessionStorage.getItem(LS_AUTH)===AUTH_HASH; }catch(e){ return false; } }
+function logout(){ try{ localStorage.removeItem(LS_AUTH); sessionStorage.removeItem(LS_AUTH); }catch(e){} closePanel(); showGate(); }
+function showGate(){ const g = document.getElementById("gate"); g.hidden = false; document.getElementById("lp").value = ""; setTimeout(()=>document.getElementById("lu").focus(), 50); }
+document.getElementById("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const u = document.getElementById("lu").value.trim().toLowerCase(), pw = document.getElementById("lp").value;
+  let h = ""; try{ h = await sha(u + ":" + pw); }catch(err){}
+  if(h===AUTH_HASH){
+    try{ (document.getElementById("lr").checked ? localStorage : sessionStorage).setItem(LS_AUTH, AUTH_HASH); }catch(err){}
+    document.getElementById("gate").hidden = true; start();
+  } else {
+    document.getElementById("lerr").textContent = "Gebruikersnaam of wachtwoord klopt niet.";
+    const g = document.getElementById("gate"); g.classList.remove("shake"); void g.offsetWidth; g.classList.add("shake");
+  }
+});
+
+/* ---------- wijzigen ---------- */
+let last = null, toastTimer = null;
+function change(n,s,f,d,cid,img,z){
+  const k = keyOf(s,f,cid,z);
+  const m = state.kaarten[n] = state.kaarten[n] || {};
+  m[k] = Math.max(0,(m[k]||0) + d); if(!m[k]) delete m[k];
+  if(!Object.keys(m).length){ delete state.kaarten[n]; delete state.cover[n]; }
+  else if(state.cover[n] && !ownedCids(n).has(state.cover[n])) delete state.cover[n];
+  if(cid && img && IMG_OK.test(img)) state.img[cid] = img;
+  save();
+}
+function add(n,s,f,d,stay,cid,img,z){
+  const before = total(n);
+  let cBefore = 0; for(let i=1;i<=1025;i++) if(has(i)) cBefore++;
+  change(n,s,f,d,cid,img,z);
+  if(cid && d>0 && !state.meta[cid]) fetchMeta(cid).then(()=>{ if(view==="stat") renderStat(); }).catch(()=>{});
+  if(d>0){
+    last = {n,s,f,cid,z};
+    const msg = nameOf(n) + (s!=="Gewoon"?" " + s:"") + (z?" " + z:"") + (f!=="Normaal"?" " + f.toLowerCase():"") + (before===0 ? " is gevangen!" : " erbij");
+    if(before===0){
+      const ms = MILESTONES.includes(cBefore+1) ? cBefore+1 : 0;
+      reveal(n, f!=="Normaal", s, cid && state.img[cid] ? state.img[cid] + "/high.webp" : "", ms); pendingMsg = msg;
+    } else toast(msg);
+  }
+  renderAll();
+  if(stay){ renderPanel(); return; }
+  closePanel();
+  if(view==="erbij"){ const q = document.getElementById("q"); q.value = ""; renderResults(); if(document.getElementById("reveal").hidden) q.focus(); }
+  else { const e = document.querySelector('#v-'+view+' .slot[data-n="'+n+'"]'); if(e) e.classList.add("pop"); }
+}
+function toast(msg){
+  const t = document.getElementById("toast"); document.getElementById("toastMsg").textContent = msg;
+  document.getElementById("undo").hidden = !last;
+  t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove("show"), 3500);
+}
+document.getElementById("undo").addEventListener("click", () => {
+  if(!last) return; change(last.n,last.s,last.f,-1,last.cid,"",last.z); last = null;
+  document.getElementById("toast").classList.remove("show"); renderAll();
+});
+
+/* ---------- onthulling ---------- */
+let revealTimer = null, pendingMsg = "";
+function reveal(n, shine, s, bigImg, milestone){
+  const r = document.getElementById("reveal"); r.innerHTML = "";
+  let face;
+  if(bigImg){ face = el("div",{class:"face img"}, el("img",{src:bigImg,alt:nameOf(n)})); }
+  else {
+    const art = el("div",{class:"art"}); art.append(icon(types(n)[0]));
+    face = el("div",{class:"face"}, el("div",{class:"fi"}, el("div",{class:"row"}, el("span",{}, pad(n)), el("span",{}, s!=="Gewoon"?s:"")), art, el("div",{class:"nm"}, nameOf(n))));
+  }
+  const card = el("div",{class:"rcard"+(shine?" shine":"")}, el("div",{class:"rback"}), face);
+  colorVars(card,n);
+  const conf = el("div",{class:"confetti"});
+  const cols = ["#ffcb3d","#7af0ff","#ff8fd0","#7affc1","#b48cff", TYPE[types(n)[0]]];
+  const amount = milestone ? 90 : 40;
+  for(let i=0;i<amount;i++){ conf.append(el("i",{style:`left:${Math.random()*100}%;background:${cols[i%cols.length]};animation-delay:${(Math.random()*0.8).toFixed(2)}s;animation-duration:${(1.8+Math.random()*1.6).toFixed(2)}s`})); }
+  const head = milestone ? (milestone===1025 ? "Alle 1025 gevangen!" : milestone + " Pokémon gevangen!") : nameOf(n) + " gevangen!";
+  r.append(el("div",{class:"rays"}), conf, el("div",{class:"rstack"}, el("div",{class:"rtext"}, head), card, el("div",{class:"rsub"}, milestone ? nameOf(n) + " was nummer " + milestone + ". Tik om verder te gaan" : "Tik om verder te gaan")));
+  document.getElementById("toast").classList.remove("show");
+  r.hidden = false; clearTimeout(revealTimer); revealTimer = setTimeout(closeReveal, milestone ? 6000 : 4500);
+}
+function closeReveal(){ const r = document.getElementById("reveal"); if(r.hidden) return; r.hidden = true; r.innerHTML = ""; clearTimeout(revealTimer);
+  if(pendingMsg){ toast(pendingMsg); pendingMsg = ""; }
+  if(view==="erbij") document.getElementById("q").focus(); }
+document.getElementById("reveal").addEventListener("click", closeReveal);
+
+/* ---------- 3D-kantelen op desktop ---------- */
+if(matchMedia("(hover:hover) and (pointer:fine)").matches && !matchMedia("(prefers-reduced-motion:reduce)").matches){
+  document.addEventListener("pointermove", e => {
+    const s = e.target.closest && e.target.closest(".slot.has,.slot.photo"); 
+    document.querySelectorAll(".slot.tilt").forEach(x => { if(x!==s){ x.classList.remove("tilt"); x.style.removeProperty("--rx"); x.style.removeProperty("--ry"); } });
+    if(!s) return; const r = s.getBoundingClientRect();
+    const x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5;
+    s.classList.add("tilt"); s.style.setProperty("--ry", (x*16).toFixed(1)+"deg"); s.style.setProperty("--rx", (-y*16).toFixed(1)+"deg");
+  });
+}
+
+/* ---------- navigatie ---------- */
+function show(v){
+  view = v;
+  document.querySelectorAll("nav.tabs button").forEach(b => { if(b.dataset.v===v) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  ["boek","erbij","mis","dub","stat"].forEach(x => document.getElementById("v-"+x).hidden = x!==v);
+  document.getElementById("regions").style.display = v==="erbij" ? "none" : "";
+  renderView(); window.scrollTo(0,0);
+  if(v==="erbij") setTimeout(()=>document.getElementById("q").focus(), 50);
+}
+function renderView(){ if(view==="boek") renderBoek(false); else if(view==="mis") renderBoek(true); else if(view==="dub") renderDub(); else if(view==="stat") renderStat(); else renderResults(); }
+function renderAll(){ renderHead(); renderView(); }
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => show(b.dataset.v)));
+document.getElementById("q").addEventListener("input", renderResults);
+document.getElementById("q").addEventListener("keydown", e => { if(e.key==="Enter"){ const f = document.querySelector("#results .res"); if(f) f.click(); } });
+document.getElementById("scrim").addEventListener("click", e => { if(e.target.id==="scrim" && panelMode!=="owner") closePanel(); });
+document.addEventListener("keydown", e => {
+  if(e.key==="Escape"){ if(!document.getElementById("reveal").hidden) closeReveal(); else if(!document.getElementById("scrim").hidden && panelMode!=="owner") closePanel(); }
+  if(e.key==="/" && document.activeElement.tagName!=="INPUT" && document.getElementById("gate").hidden){ e.preventDefault(); show("erbij"); }
+});
+document.getElementById("setBtn").addEventListener("click", openSettings);
+
+/* thema */
+try{ const t = localStorage.getItem("tvb-theme"); if(t) document.documentElement.dataset.theme = t; }catch(e){}
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const t = dark ? "light" : "dark"; document.documentElement.dataset.theme = t; try{ localStorage.setItem("tvb-theme", t); }catch(e){}
+});
+
+let started = false;
+function start(){
+  if(started) return; started = true;
+  loadLocal(); setStatus("Bewaard op dit apparaat."); renderAll();
+  if(!state.owner) openOwner();
+  setTimeout(backfillMeta, 800);
+}
+if(authed()) start(); else showGate();
+</script>
+</body>
+</html>
