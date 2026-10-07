@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#161c4a">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-RMxDrPnWvBCSyeac4VxfEJwjE1Qh872UaSKNRG0IgZo='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src https://assets.tcgdex.net data: blob:; connect-src https://api.tcgdex.net; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'none'">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Verzamelboek">
@@ -44,25 +47,6 @@ button{cursor:pointer;touch-action:manipulation}
 svg.ti{width:1em;height:1em;fill:currentColor;flex:0 0 auto}
 .press{transition:transform .12s ease}
 .press:active{transform:scale(.95)}
-
-/* ---------- inlog ---------- */
-.gate{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;
-  background:radial-gradient(circle at 15% 20%,rgba(255,255,255,.9) 0 1px,transparent 1.5px) 0 0/90px 70px,
-             radial-gradient(circle at 60% 70%,rgba(255,255,255,.6) 0 1px,transparent 1.5px) 0 0/130px 90px,
-             linear-gradient(180deg,var(--night),var(--night2))}
-.gate[hidden]{display:none}
-.gate form{width:min(100%,400px);background:var(--sleeve);color:var(--ink);border-radius:26px;padding:26px 22px 22px;box-shadow:0 20px 60px rgba(0,0,0,.45);position:relative}
-.gate form::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;border-radius:26px 26px 0 0;background:var(--holo)}
-.gate h1{font-family:var(--disp);font-weight:400;font-size:2rem;margin:4px 0 2px;line-height:1.05}
-.gate p{margin:0 0 16px;color:var(--soft);font-weight:600}
-.gate label{display:block;font-weight:800;margin:12px 2px 6px}
-.gate input[type=text],.gate input[type=password]{width:100%;font-size:1.2rem;font-weight:700;padding:12px 14px;border-radius:14px;border:3px solid var(--line);background:var(--page)}
-.gate input:focus{border-color:var(--gold);outline:none}
-.gate .rem{display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:700;color:var(--soft)}
-.gate .rem input{width:22px;height:22px;accent-color:var(--ok)}
-.gate .err{color:#d33a4a;font-weight:800;min-height:1.4em;margin:10px 2px 0}
-.gate.shake form{animation:shake .4s}
-@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 
 /* ---------- kop ---------- */
 header.top{position:relative;color:#fff;padding:16px 18px 24px;overflow:hidden;
@@ -383,19 +367,6 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 </style>
 </head>
 <body>
-<div class="gate" id="gate" hidden>
-  <form id="loginForm" autocomplete="on">
-    <h1>Verzamelboek</h1>
-    <p>Log in om je boek te openen.</p>
-    <label for="lu">Gebruikersnaam</label>
-    <input type="text" id="lu" name="username" autocomplete="username" autocapitalize="off" spellcheck="false" required>
-    <label for="lp">Wachtwoord</label>
-    <input type="password" id="lp" name="password" autocomplete="current-password" required>
-    <label class="rem"><input type="checkbox" id="lr" checked> Onthoud mij op dit apparaat</label>
-    <p class="err" id="lerr" role="alert"></p>
-    <button class="big press" type="submit">Open mijn boek</button>
-  </form>
-</div>
 
 <header class="top">
   <div class="wrap">
@@ -482,8 +453,15 @@ function icon(t){ const s = document.createElementNS("http://www.w3.org/2000/svg
 const DEFAULT_SOORTEN = ["Gewoon","ex","EX","GX","V","VMAX","VSTAR","Mega","Anders"];
 const AFWERKING = ["Normaal","Holo","Reverse holo"];
 const ZELD = {"":"Geen", IR:"Illustration rare", SIR:"Special illustration rare"};
-const LS_KEY = "tijmen-verzamelboek-v1", LS_BACKUP = "tijmen-verzamelboek-laatste-backup", LS_AUTH = "verzamelboek-auth";
-const AUTH_HASH = "5b501ff89a937bbf849d15d55ea2da6895d64f75787d13e9166a1333449fc8d0";
+const LS_KEY = "verzamelboek-v1", LS_BACKUP = "verzamelboek-laatste-backup";
+// eenmalig: opslag van eerdere versies overzetten naar de nieuwe namen en oude inlog-sleutel opruimen
+(function migrate(){ try{
+  for(const k of Object.keys(localStorage)){
+    if(/^[a-z]+-verzamelboek-v1$/.test(k) && k!==LS_KEY){ if(!localStorage.getItem(LS_KEY)) localStorage.setItem(LS_KEY, localStorage.getItem(k)); localStorage.removeItem(k); }
+    else if(/^[a-z]+-verzamelboek-laatste-backup$/.test(k) && k!==LS_BACKUP){ if(!localStorage.getItem(LS_BACKUP)) localStorage.setItem(LS_BACKUP, localStorage.getItem(k)); localStorage.removeItem(k); }
+  }
+  localStorage.removeItem("verzamelboek-auth"); sessionStorage.removeItem("verzamelboek-auth");
+}catch(e){} })();
 const API = "https://api.tcgdex.net/v2/en";
 const IMG_OK = /^https:\/\/assets\.tcgdex\.net\/[A-Za-z0-9._\/-]+$/;
 const RANKS = [[0,"Beginnende verzamelaar"],[25,"Verzamelaar"],[100,"Ervaren verzamelaar"],[250,"Expert-verzamelaar"],[500,"Meesterverzamelaar"],[1000,"Bijna-legende"],[1025,"Legende"]];
@@ -994,7 +972,7 @@ function saveSoort(){
 function openOwner(){ panelMode = "owner"; panelN = 0; renderOwner(); document.getElementById("scrim").hidden = false; setTimeout(()=>{ const i = document.getElementById("ownerIn"); if(i) i.focus(); }, 60); }
 function renderOwner(){
   const p = document.getElementById("panel"); p.innerHTML = "";
-  const inp = el("input",{id:"ownerIn",class:"field",maxlength:"24",placeholder:"Bijvoorbeeld Tijmen",value:state.owner||"","aria-label":"Naam"});
+  const inp = el("input",{id:"ownerIn",class:"field",maxlength:"24",placeholder:"Typ een naam",value:state.owner||"","aria-label":"Naam"});
   const go = () => { const v = inp.value.trim().slice(0,24); if(!v){ inp.focus(); return; } state.owner = v; save(); renderHead(); closePanel(); };
   inp.addEventListener("keydown", e => { if(e.key==="Enter") go(); });
   p.append(el("div",{class:"phead",style:"--t1:#2a2f86;--t2:#161c4a"}, el("div",{}, el("h3",{},"Van wie is dit boek?"), el("p",{},"De naam komt bovenaan in de titel."))),
@@ -1013,12 +991,11 @@ function renderSettings(){
       el("button",{class:"big press",onclick:exportData},"Back-up downloaden"),
       el("p",{},"Terugzetten vervangt wat er nu in het boek staat. Hiermee neem je ook de collectie uit de Claude-versie over."),
       el("button",{class:"big alt press",onclick:()=>document.getElementById("importFile").click()},"Back-up terugzetten"),
-      el("p",{class:"label"},"Account"),
-      el("button",{class:"big ghost press",onclick:logout},"Uitloggen op dit apparaat")));
+));
 }
 function exportData(){
   const now = new Date();
-  const data = JSON.stringify({app:"tijmens-verzamelboek", ...state, exported:now.toISOString()}, null, 2);
+  const data = JSON.stringify({app:"verzamelboek", ...state, exported:now.toISOString()}, null, 2);
   const url = URL.createObjectURL(new Blob([data], {type:"application/json"}));
   const a = el("a",{href:url, download:"verzamelboek-" + now.toISOString().slice(0,10) + ".json"});
   document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 2000);
@@ -1035,24 +1012,6 @@ document.getElementById("importFile").addEventListener("change", async e => {
     if(!confirm("Dit vervangt het huidige boek door de back-up met " + c + " Pokémon. Doorgaan?")) return;
     state = nieuw; save(); closePanel(); renderAll(); last = null; toast("Back-up teruggezet: " + c + " Pokémon"); backfillMeta();
   }catch(err){ last = null; toast("Dit bestand is geen back-up van het verzamelboek"); }
-});
-
-/* ---------- inlog ---------- */
-async function sha(s){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join(""); }
-function authed(){ try{ return localStorage.getItem(LS_AUTH)===AUTH_HASH || sessionStorage.getItem(LS_AUTH)===AUTH_HASH; }catch(e){ return false; } }
-function logout(){ try{ localStorage.removeItem(LS_AUTH); sessionStorage.removeItem(LS_AUTH); }catch(e){} closePanel(); showGate(); }
-function showGate(){ const g = document.getElementById("gate"); g.hidden = false; document.getElementById("lp").value = ""; setTimeout(()=>document.getElementById("lu").focus(), 50); }
-document.getElementById("loginForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  const u = document.getElementById("lu").value.trim().toLowerCase(), pw = document.getElementById("lp").value;
-  let h = ""; try{ h = await sha(u + ":" + pw); }catch(err){}
-  if(h===AUTH_HASH){
-    try{ (document.getElementById("lr").checked ? localStorage : sessionStorage).setItem(LS_AUTH, AUTH_HASH); }catch(err){}
-    document.getElementById("gate").hidden = true; start();
-  } else {
-    document.getElementById("lerr").textContent = "Gebruikersnaam of wachtwoord klopt niet.";
-    const g = document.getElementById("gate"); g.classList.remove("shake"); void g.offsetWidth; g.classList.add("shake");
-  }
 });
 
 /* ---------- wijzigen ---------- */
@@ -1263,7 +1222,7 @@ document.getElementById("q").addEventListener("keydown", e => { if(e.key==="Ente
 document.getElementById("scrim").addEventListener("click", e => { if(e.target.id==="scrim" && panelMode!=="owner") closePanel(); });
 document.addEventListener("keydown", e => {
   if(e.key==="Escape"){ if(!document.getElementById("reveal").hidden) closeReveal(); else if(!document.getElementById("scrim").hidden && panelMode!=="owner") closePanel(); }
-  if(e.key==="/" && document.activeElement.tagName!=="INPUT" && document.getElementById("gate").hidden){ e.preventDefault(); show("erbij"); }
+  if(e.key==="/" && document.activeElement.tagName!=="INPUT"){ e.preventDefault(); show("erbij"); }
 });
 document.getElementById("setBtn").addEventListener("click", openSettings);
 
@@ -1281,7 +1240,7 @@ function start(){
   if(!state.owner) openOwner();
   setTimeout(() => { resolveAuto().then(backfillMeta); }, 800);
 }
-if(authed()) start(); else showGate();
+start();
 </script>
 </body>
 </html>
