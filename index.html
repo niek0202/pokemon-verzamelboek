@@ -109,7 +109,7 @@ nav.tabs button.plus svg{background:var(--gold);color:var(--night);border-radius
 .reg strong{display:block;font-family:var(--disp);font-weight:400;font-size:1.05rem;line-height:1.1}
 .reg em{font-style:normal;font-size:.85rem;color:var(--soft);font-weight:600}
 
-main{padding:6px 14px 130px}
+main{padding:6px 14px calc(130px + var(--trayh,0px))}
 .view[hidden]{display:none}
 h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 .hint{color:var(--soft);margin:0 4px 14px;font-size:1rem;font-weight:600}
@@ -265,6 +265,13 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 .confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall 2.4s ease-in forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 
+/* ---------- mis ik nog: voorbeeldplaatjes ---------- */
+.slot.miss{background:#0d1230;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.slot.miss img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.9)}
+.slot.miss .lbl{position:absolute;left:0;right:0;bottom:0;padding:18px 7px 6px;color:#fff;font-weight:800;font-size:.85rem;line-height:1.1;
+  background:linear-gradient(180deg,transparent,rgba(10,14,40,.92) 55%)}
+.slot.miss .lbl small{display:block;font-size:.72rem;opacity:.8}
+.slot.miss .qb{position:absolute;right:6px;top:6px;width:26px;height:26px;border-radius:50%;background:var(--gold);color:#18204a;font-family:var(--disp);display:grid;place-items:center;box-shadow:0 2px 0 var(--gold-d)}
 /* ---------- snel veel (bulk) ---------- */
 .modes{display:flex;gap:6px;background:var(--sleeve);border-radius:16px;padding:5px;box-shadow:var(--shadow);margin:12px 0 4px;max-width:520px}
 .modes button{flex:1;border:0;border-radius:12px;padding:8px 10px;font-weight:800;font-size:1.05rem;background:transparent;color:var(--soft)}
@@ -279,20 +286,22 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 .selc.zero{color:var(--line)}
 .bsub{font-family:var(--disp);font-size:1.25rem;margin:22px 4px 8px}
 .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
-.btile{position:relative;border:0;border-radius:12px;padding:8px 8px 8px 12px;text-align:left;background:var(--sleeve);box-shadow:var(--shadow);min-height:64px;overflow:hidden}
+.btile{position:relative;border:0;border-radius:12px;padding:8px 8px 8px 12px;text-align:left;background:var(--sleeve);box-shadow:var(--shadow);min-height:70px;overflow:hidden;display:flex;flex-direction:column;gap:2px}
 .btile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(180deg,var(--t1),var(--t2))}
 .btile .no{display:block;font-size:.75rem;font-weight:800;color:var(--soft)}
 .btile .nm{display:block;font-weight:800;line-height:1.1;font-size:.98rem;overflow-wrap:anywhere;hyphens:auto}
-.btile.sel{padding-right:38px;min-height:78px}
+.btile.sel{min-height:104px}
 .btile .hv{display:block;font-size:.72rem;font-weight:800;color:var(--ok)}
 .btile.sel{background:linear-gradient(160deg,var(--t1),var(--t2));color:#fff}
 .btile.sel .no,.btile.sel .hv{color:rgba(255,255,255,.85)}
-.btile .badge{position:absolute;right:6px;top:6px;min-width:26px;height:26px;border-radius:13px;background:var(--gold);color:#18204a;font-family:var(--disp);display:grid;place-items:center;padding:0 6px}
-.btile .min{position:absolute;right:6px;bottom:6px;width:30px;height:30px;border-radius:10px;border:0;background:rgba(255,255,255,.9);color:#18204a;font-weight:800;font-size:1.2rem;line-height:1}
+.btile .bctl{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:auto;padding-top:6px}
+.btile .min{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.92);color:#18204a;font-weight:800;font-size:1.4rem;line-height:1;flex:0 0 auto}
+.btile .badge{min-width:40px;height:30px;border-radius:15px;background:var(--gold);color:#18204a;font-family:var(--disp);font-size:1.15rem;display:grid;place-items:center;padding:0 8px}
 .tray{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:9;width:min(96vw,640px);
   display:flex;align-items:center;gap:10px;background:var(--night);color:#fff;border-radius:18px;padding:10px 10px 10px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .tray[hidden]{display:none}
-.tray .sum{flex:1;font-weight:700;line-height:1.15}
+.tray .sum{flex:1;min-width:0;font-weight:700;line-height:1.1;white-space:nowrap}
+.tray .sum small{display:block;font-size:.85rem;opacity:.8}
 .tray .sum b{font-family:var(--disp);font-weight:400;font-size:1.4rem;color:var(--gold)}
 .tray button{border:0;border-radius:12px;padding:10px 14px;font-weight:800}
 .tray .clr{background:rgba(255,255,255,.14);color:#fff}
@@ -308,6 +317,17 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 .burst b{font-family:var(--disp);font-weight:400;font-size:5rem;line-height:1;color:var(--gold);text-shadow:0 5px 0 var(--gold-d)}
 /* ---------- mobiel ---------- */
 @media (max-width:440px){
+  .tray{padding:8px 8px 8px 12px;gap:6px;bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+  .tray button{padding:9px 10px}
+  .tray .go{font-size:1.1rem}
+  body.compact .rank, body.compact .status{display:none}
+  body.compact header.top{padding:12px 14px 18px}
+  body.compact .count b{font-size:2.4rem}
+  body.compact .bar{margin-top:8px;height:14px}
+  .bres{gap:8px;padding:8px}
+  .bres .dot{display:none}
+  .bres .nm{font-size:1.15rem}
+  .plus1{min-width:58px;height:48px}
   .btile .nm{font-size:.88rem}
   .bgrid{grid-template-columns:repeat(3,1fr);gap:6px}
   .grid{grid-template-columns:repeat(3,1fr);gap:8px}
@@ -343,6 +363,7 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
   .stats .kpis{grid-column:1/-1}
 }
 @media (hover:hover){.slot:hover{z-index:2}}
+@media (max-width:380px){.btile .nm{font-size:.8rem}.btile{padding-left:10px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.slot{transform:none!important}}
 </style>
 </head>
@@ -601,6 +622,41 @@ async function resolveAuto(){
   } finally { resolving = false; }
 }
 
+/* voorbeeldplaatje per Pokémon voor 'Mis ik nog' (nieuwste gewone kaart; bewaard zodat het maar één keer opgehaald wordt) */
+const LS_PREV = "verzamelboek-voorbeelden";
+let preview = {}; try{ const p = JSON.parse(localStorage.getItem(LS_PREV) || "{}"); for(const [n,u] of Object.entries(p)) if(u==="" || (typeof u==="string" && IMG_OK.test(u))) preview[n] = u; }catch(e){}
+let prevTimer = null; function savePreview(){ clearTimeout(prevTimer); prevTimer = setTimeout(()=>{ try{ localStorage.setItem(LS_PREV, JSON.stringify(preview)); }catch(e){} }, 800); }
+async function previewCard(n){
+  const ok = c => c && c.id && typeof c.image==="string" && IMG_OK.test(c.image);
+  const en = nameOf(n);
+  let l = []; try{ const r = await getJSON(API + "/cards?dexId=eq:" + n); if(Array.isArray(r)) l = r.filter(ok); }catch(e){}
+  if(!l.length){ const re = new RegExp("(^|[^A-Za-z])" + escRe(en) + "($|[^A-Za-z])", "i"); const r = await getJSON(API + "/cards?name=" + encodeURIComponent(en)); if(Array.isArray(r)) l = r.filter(c => ok(c) && re.test(c.name||"")); }
+  const plain = l.filter(c => (c.name||"").toLowerCase()===en.toLowerCase());
+  const pickc = (plain.length ? plain : l); return pickc.length ? pickc[pickc.length-1].image : "";
+}
+const prevQueue = [], prevBusy = new Set(); let prevActive = 0, prevPaused = false;
+function wantPreview(n){ if(n in preview || prevBusy.has(n) || prevPaused) return; prevBusy.add(n); prevQueue.push(n); pumpPreview(); }
+function pumpPreview(){
+  while(prevActive < 3 && prevQueue.length){
+    const n = prevQueue.shift(); prevActive++;
+    previewCard(n).then(u => { preview[n] = u; savePreview(); const old = document.querySelector('#v-mis .slot[data-n="'+n+'"]'); if(old && u) old.replaceWith(missSlot(n)); })
+      .catch(() => { prevPaused = true; prevQueue.length = 0; setTimeout(()=>{ prevPaused = false; }, 30000); })
+      .finally(() => { prevBusy.delete(n); prevActive--; pumpPreview(); });
+  }
+}
+const prevObs = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ prevObs.unobserve(e.target); wantPreview(+e.target.dataset.n); } }), {rootMargin:"400px 0px"}) : null;
+function missSlot(n){
+  const u = preview[n];
+  if(u){
+    const img = el("img",{src:u + "/low.webp",alt:"",loading:"lazy",decoding:"async"});
+    const b = el("button",{class:"slot miss","data-n":n,"aria-label":nameOf(n)+", nog niet",onclick:()=>openPanel(n)}, img,
+      el("span",{class:"qb"},"?"), el("span",{class:"lbl"}, el("small",{}, pad(n)), nameOf(n)));
+    img.addEventListener("error", () => { delete preview[n]; b.replaceWith(slot(n)); });
+    return b;
+  }
+  const b = slot(n); if(prevObs && !(n in preview)) prevObs.observe(b); return b;
+}
+
 /* ---------- kop + regio's ---------- */
 function rankOf(c){ let r = RANKS[0][1]; for(const [min,name] of RANKS) if(c>=min) r = name; return r; }
 function renderHead(){
@@ -610,7 +666,7 @@ function renderHead(){
   document.getElementById("barWrap").setAttribute("aria-valuenow", c);
   document.getElementById("rankName").textContent = rankOf(c);
   const next = MILESTONES.find(m => m > c);
-  document.getElementById("rankNext").textContent = next ? "Nog " + (next-c) + " tot " + next + "!" : "Alles gevangen!";
+  document.getElementById("rankNext").textContent = !next ? "Alles gevangen!" : c===0 ? "Vang je eerste Pokémon!" : "Nog " + (next-c) + " tot je " + next + " hebt!";
   const title = possessive(state.owner);
   document.getElementById("title").textContent = title; document.title = title;
   const wrap = document.getElementById("regions"); wrap.innerHTML = "";
@@ -669,7 +725,7 @@ function renderBoek(onlyMissing){
     const nums = []; DEX.forEach((d,j)=>{ if(d[3]===g && (onlyMissing ? !has(j+1) : (!checkOnly || autoCount(j+1)>0))) nums.push(j+1); });
     if(!nums.length) return; any = true;
     const all = DEX.filter(d=>d[3]===g).length, got = DEX.filter((d,j)=>d[3]===g && has(j+1)).length;
-    const grid = el("div",{class:"grid"}); nums.forEach(n => grid.append(slot(n)));
+    const grid = el("div",{class:"grid"}); nums.forEach(n => grid.append(onlyMissing ? missSlot(n) : slot(n)));
     root.append(el("div",{class:"sheet",style:"--rc:"+REGION_COL[i]}, el("h3",{}, r, el("span",{}, onlyMissing ? "nog " + (all-got) + " te vangen" : got + " / " + all)), grid));
   });
   if(!any) root.append(el("p",{class:"empty"}, onlyMissing ? "Allemaal gevangen in deze regio! ★" : checkOnly ? "Niks meer te checken in deze regio. ✓" : "Nog niks in deze regio."));
@@ -1025,10 +1081,10 @@ function setMode(b){
 function renderTray(){
   const tr = document.getElementById("tray"), t = selTotals();
   const on = view==="erbij" && bulkMode && t.c>0;
-  tr.hidden = !on; document.documentElement.style.setProperty("--toastb", on ? "170px" : "96px");
+  tr.hidden = !on; document.documentElement.style.setProperty("--toastb", on ? "170px" : "96px"); document.documentElement.style.setProperty("--trayh", on ? "90px" : "0px");
   if(!on) return; tr.innerHTML = "";
-  tr.append(el("span",{class:"sum"}, el("b",{}, t.c), t.c===1 ? " kaart" : " kaarten", el("br"), t.p + (t.p===1?" Pokémon":" Pokémon")),
-    el("button",{class:"clr press",onclick:()=>{ if(confirm("Selectie wissen?")){ sel = {}; saveSel(); renderBulk(); renderTray(); } }},"Wissen"),
+  tr.append(el("span",{class:"sum"}, el("b",{}, t.c), t.c===1 ? " kaart" : " kaarten", el("small",{}, t.p + " Pokémon")),
+    el("button",{class:"clr press","aria-label":"Selectie wissen",onclick:()=>{ if(confirm("Selectie wissen?")){ sel = {}; saveSel(); renderBulk(); renderTray(); } }},"Wissen"),
     el("button",{class:"go press",onclick:bulkCommit},"Toevoegen"));
 }
 function bulkRow(n){
@@ -1044,7 +1100,9 @@ function bulkRow(n){
 function bulkTile(n){
   const b = el("button",{class:"btile press" + (sel[n] ? " sel" : ""),"data-n":n,onclick:e=>{ if(e.target.classList.contains("min")) return; bump(n,1); syncTile(n); }},
     el("span",{class:"no"}, pad(n)), el("span",{class:"nm"}, nameOf(n)), has(n) ? el("span",{class:"hv"}, "heb ik: " + total(n)) : null);
-  if(sel[n]){ b.append(el("span",{class:"badge"}, "×" + sel[n]), el("span",{class:"min",role:"button","aria-label":"Eén minder",onclick:e=>{ e.stopPropagation(); bump(n,-1); syncTile(n); }},"−")); }
+  if(sel[n]){ b.append(el("span",{class:"bctl"},
+      el("span",{class:"min",role:"button","aria-label":"Eén minder",onclick:e=>{ e.stopPropagation(); bump(n,-1); syncTile(n); }},"−"),
+      el("span",{class:"badge"}, "×" + sel[n]))); }
   colorVars(b,n); return b;
 }
 function syncTile(n){ const old = document.querySelector('#bulkBox .btile[data-n="'+n+'"]'); if(old) old.replaceWith(bulkTile(n)); }
@@ -1066,7 +1124,7 @@ function renderBulk(){
   inp.addEventListener("input", renderBulkResults);
   inp.addEventListener("focus", () => inp.select());
   inp.addEventListener("keydown", e => { if(e.key==="Enter"){ const r = document.querySelector("#bres .plus1"); if(r){ r.click(); inp.value = ""; renderBulkResults(); } } });
-  root.append(el("p",{class:"hint",style:"margin-top:10px"},"Pak je stapel en tik voor elke kaart +1. Heb je er drie van? Tik drie keer. Druk daarna op Toevoegen. De app zet er de oudste kaart als voorbeeld bij; later kun je per Pokémon de echte kaart kiezen."),
+  root.append(el("p",{class:"hint",style:"margin-top:10px"},"Tik voor elke kaart +1. Drie dezelfde? Drie keer tikken. Klaar? Druk op Toevoegen."),
     el("div",{class:"search"}, inp), el("div",{class:"results",id:"bres"}));
   const g = region || 0;
   root.append(el("p",{class:"bsub"}, g ? "Of tik ze aan in " + REGIONS[g-1] : "Of tik ze aan (kies hierboven een regio voor een kortere lijst)"));
@@ -1140,7 +1198,7 @@ if(matchMedia("(hover:hover) and (pointer:fine)").matches && !matchMedia("(prefe
 
 /* ---------- navigatie ---------- */
 function show(v){
-  view = v;
+  view = v; document.body.classList.toggle("compact", v==="erbij");
   document.querySelectorAll("nav.tabs button").forEach(b => { if(b.dataset.v===v) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
   ["boek","erbij","mis","dub","stat"].forEach(x => document.getElementById("v-"+x).hidden = x!==v);
   document.getElementById("regions").style.display = (v==="erbij" && !bulkMode) ? "none" : "";
