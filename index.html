@@ -236,7 +236,7 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 .note{font-size:.9rem;color:var(--soft);font-weight:600;margin:8px 0 0}
 
 /* ---------- melding + onthulling ---------- */
-.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;z-index:30;pointer-events:none;
+.toast{position:fixed;left:50%;bottom:calc(var(--toastb,96px) + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;z-index:30;pointer-events:none;
   background:var(--night);color:#fff;padding:10px 14px 10px 18px;border-radius:14px;font-weight:700;display:flex;gap:12px;align-items:center;transition:all .25s ease;width:max-content;max-width:min(92vw,520px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
 .toast button{border:0;background:var(--gold);color:#18204a;border-radius:10px;padding:4px 10px;font-weight:800}
@@ -265,8 +265,51 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 .confetti i{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall 2.4s ease-in forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 
+/* ---------- snel veel (bulk) ---------- */
+.modes{display:flex;gap:6px;background:var(--sleeve);border-radius:16px;padding:5px;box-shadow:var(--shadow);margin:12px 0 4px;max-width:520px}
+.modes button{flex:1;border:0;border-radius:12px;padding:8px 10px;font-weight:800;font-size:1.05rem;background:transparent;color:var(--soft)}
+.modes button[aria-pressed="true"]{background:var(--night2);color:#fff}
+.bres{display:flex;align-items:center;gap:12px;background:var(--sleeve);border-radius:16px;padding:8px 10px 8px 14px;box-shadow:var(--shadow)}
+.bres .nm{font-family:var(--disp);font-size:1.3rem;flex:1;min-width:0}
+.bres .nm small{display:block;font-family:"Baloo 2",sans-serif;font-size:.85rem;color:var(--soft);font-weight:700}
+.bres .dot{width:40px;height:40px;border-radius:12px;flex:0 0 auto;display:grid;place-items:center;color:#fff;font-size:1.3rem;background:linear-gradient(160deg,var(--t1),var(--t2))}
+.plus1{border:0;border-radius:14px;min-width:64px;height:52px;padding:0 14px;font-family:var(--disp);font-size:1.5rem;background:var(--ok);color:#fff;box-shadow:0 4px 0 var(--ok-d)}
+.plus1:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ok-d)}
+.selc{min-width:2.2ch;text-align:center;font-family:var(--disp);font-size:1.4rem}
+.selc.zero{color:var(--line)}
+.bsub{font-family:var(--disp);font-size:1.25rem;margin:22px 4px 8px}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.btile{position:relative;border:0;border-radius:12px;padding:8px 8px 8px 12px;text-align:left;background:var(--sleeve);box-shadow:var(--shadow);min-height:64px;overflow:hidden}
+.btile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(180deg,var(--t1),var(--t2))}
+.btile .no{display:block;font-size:.75rem;font-weight:800;color:var(--soft)}
+.btile .nm{display:block;font-weight:800;line-height:1.1;font-size:.98rem;overflow-wrap:anywhere;hyphens:auto}
+.btile.sel{padding-right:38px;min-height:78px}
+.btile .hv{display:block;font-size:.72rem;font-weight:800;color:var(--ok)}
+.btile.sel{background:linear-gradient(160deg,var(--t1),var(--t2));color:#fff}
+.btile.sel .no,.btile.sel .hv{color:rgba(255,255,255,.85)}
+.btile .badge{position:absolute;right:6px;top:6px;min-width:26px;height:26px;border-radius:13px;background:var(--gold);color:#18204a;font-family:var(--disp);display:grid;place-items:center;padding:0 6px}
+.btile .min{position:absolute;right:6px;bottom:6px;width:30px;height:30px;border-radius:10px;border:0;background:rgba(255,255,255,.9);color:#18204a;font-weight:800;font-size:1.2rem;line-height:1}
+.tray{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:9;width:min(96vw,640px);
+  display:flex;align-items:center;gap:10px;background:var(--night);color:#fff;border-radius:18px;padding:10px 10px 10px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.tray[hidden]{display:none}
+.tray .sum{flex:1;font-weight:700;line-height:1.15}
+.tray .sum b{font-family:var(--disp);font-weight:400;font-size:1.4rem;color:var(--gold)}
+.tray button{border:0;border-radius:12px;padding:10px 14px;font-weight:800}
+.tray .clr{background:rgba(255,255,255,.14);color:#fff}
+.tray .go{background:var(--ok);color:#fff;font-family:var(--disp);font-weight:400;font-size:1.25rem;box-shadow:0 3px 0 var(--ok-d)}
+.filt{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.filt button{border:3px solid var(--line);background:var(--sleeve);border-radius:999px;padding:4px 14px;font-weight:800}
+.filt button[aria-pressed="true"]{border-color:var(--gold-d);background:var(--gold);color:#18204a}
+.tag.chk{background:#ff8a3d;color:#fff}
+.own.auto{box-shadow:inset 0 0 0 3px #ff8a3d}
+.okbtn{border:0;border-radius:10px;padding:0 10px;height:40px;background:#ff8a3d;color:#fff;font-weight:800;flex:0 0 auto}
+.autonote{margin:12px 0 0;padding:10px 12px;border-radius:12px;background:rgba(255,138,61,.15);font-weight:700;color:var(--ink)}
+.burst{display:flex;flex-direction:column;align-items:center;gap:10px}
+.burst b{font-family:var(--disp);font-weight:400;font-size:5rem;line-height:1;color:var(--gold);text-shadow:0 5px 0 var(--gold-d)}
 /* ---------- mobiel ---------- */
 @media (max-width:440px){
+  .btile .nm{font-size:.88rem}
+  .bgrid{grid-template-columns:repeat(3,1fr);gap:6px}
   .grid{grid-template-columns:repeat(3,1fr);gap:8px}
   .count b{font-size:3.3rem}
   .rank{margin-left:0;text-align:left;width:100%}
@@ -294,6 +337,8 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
   .pcols{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;align-items:start}
   .cgrid{max-height:62vh;grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
   .toast{bottom:28px}
+  .tray{bottom:24px}
+  .bgrid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
   .stats{grid-template-columns:1fr 1fr}
   .stats .kpis{grid-column:1/-1}
 }
@@ -347,8 +392,12 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
   <main>
     <section class="view" id="v-boek"></section>
     <section class="view" id="v-erbij" hidden>
+      <div class="modes" role="group" aria-label="Manier van toevoegen"><button id="mOne" aria-pressed="true">Eén kaart</button><button id="mBulk" aria-pressed="false">Snel veel</button></div>
+      <div id="bulkBox" hidden></div>
+      <div id="oneBox">
       <div class="search"><input id="q" type="search" placeholder="Typ een naam of nummer…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Zoek een Pokémon" enterkeyhint="search"></div>
       <div class="results" id="results"></div>
+      </div>
     </section>
     <section class="view" id="v-mis" hidden></section>
     <section class="view" id="v-dub" hidden></section>
@@ -359,6 +408,7 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 <div class="scrim" id="scrim" hidden><div class="panel" id="panel" role="dialog" aria-modal="true"></div></div>
 <input type="file" id="importFile" accept=".json,application/json" hidden>
 <div class="reveal" id="reveal" hidden aria-live="polite"></div>
+<div class="tray" id="tray" hidden></div>
 <div class="toast" id="toast" role="status"><span id="toastMsg"></span><button id="undo">Terug</button></div>
 <script>
 "use strict";
@@ -406,8 +456,10 @@ let region = 0, view = "boek";
 function blank(){ return {v:3, owner:"", soorten:[...DEFAULT_SOORTEN], kaarten:{}, img:{}, meta:{}, cover:{}}; }
 
 /* ---------- opslag ---------- */
-const keyOf = (s,f,cid,z) => [s,f,cid||"",z||""].join("|");
-const parseKey = k => { const [s,f,cid,z] = k.split("|"); return {s:s||"Gewoon", f:f||"Normaal", cid:cid||"", z:(z==="IR"||z==="SIR")?z:""}; };
+// sleutel: soort|glans|kaart-id|zeldzaamheid|auto  (auto = "1": in bulk toegevoegd, nog checken)
+const keyOf = (s,f,cid,z,a) => [s,f,cid||"",z||"",a?"1":""].join("|");
+const parseKey = k => { const [s,f,cid,z,a] = k.split("|"); return {s:s||"Gewoon", f:f||"Normaal", cid:cid||"", z:(z==="IR"||z==="SIR")?z:"", a:a==="1"}; };
+const keyFromP = p => keyOf(p.s,p.f,p.cid,p.z,p.a);
 function norm(o){
   const c = JSON.parse(JSON.stringify(o || {}));
   const kaarten = {};
@@ -415,7 +467,7 @@ function norm(o){
     const nn = parseInt(n,10); if(!(nn>=1 && nn<=1025) || !m || typeof m!=="object") continue;
     const mm = {};
     for(const [k,v] of Object.entries(m)){ const x = Math.floor(Number(v)); if(!(x>0) || typeof k!=="string") continue;
-      const p = parseKey(k); const nk = keyOf(p.s,p.f,p.cid,p.z); mm[nk] = (mm[nk]||0) + x; }
+      const p = parseKey(k); const nk = keyFromP(p); mm[nk] = (mm[nk]||0) + x; }
     if(Object.keys(mm).length) kaarten[nn] = mm;
   }
   const img = {}; for(const [k,v] of Object.entries(c.img || {})){ if(typeof v==="string" && IMG_OK.test(v)) img[k] = v; }
@@ -443,17 +495,23 @@ function colorVars(e, n){ const t = types(n); e.style.setProperty("--t1", TYPE[t
 function shade(h){ const n = parseInt(h.slice(1),16); const f = c => Math.max(0,Math.round(c*0.68)); return "#" + [n>>16,(n>>8)&255,n&255].map(c=>f(c).toString(16).padStart(2,"0")).join(""); }
 function possessive(name){ const n = name.trim(); if(!n) return "Verzamelboek"; if(/[sxz]$/i.test(n)) return n + "' verzamelboek"; if(/[aeiouyé]$/i.test(n)) return n + "'s verzamelboek"; return n + "s verzamelboek"; }
 function describe(p){ return p.s + (p.f!=="Normaal" ? " · " + p.f : "") + (p.z ? " · " + p.z : ""); }
+function autoCount(n){ let c = 0; for(const [k,v] of Object.entries(state.kaarten[n]||{})) if(parseKey(k).a) c += v; return c; }
+function allAuto(){ let c = 0, p = 0; for(const n of Object.keys(state.kaarten)){ const a = autoCount(n); if(a){ c += a; p++; } } return {cards:c, poke:p}; }
+function removeAuto(n, c){ const m = state.kaarten[n]; if(!m) return [];
+  const removed = [];
+  for(const k of Object.keys(m)){ if(c<=0) break; if(!parseKey(k).a) continue; const d = Math.min(c, m[k]); m[k] -= d; c -= d; removed.push([k,d]); if(!m[k]) delete m[k]; }
+  if(!Object.keys(m).length) delete state.kaarten[n]; return removed; }
 function inRegion(n){ return region===0 || DEX[n-1][3]===region; }
 function rarityToZ(r){ if(/special\s*illustration/i.test(r||"")) return "SIR"; if(/illustration\s*rare/i.test(r||"")) return "IR"; return ""; }
 function coverOf(n){
   const m = state.kaarten[n] || {}; const cids = [];
   for(const k of Object.keys(m)){ const p = parseKey(k); if(p.cid && state.img[p.cid]) cids.push(p); }
   if(!cids.length) return null;
-  const want = state.cover[n]; return cids.find(p=>p.cid===want) || cids[0];
+  const want = state.cover[n]; return cids.find(p=>p.cid===want) || cids.find(p=>!p.a) || cids[0];
 }
-function specials(n){ const m = state.kaarten[n]||{}; const out = new Set(); let shine=false, z = "";
-  for(const k of Object.keys(m)){ const p = parseKey(k); if(p.s!=="Gewoon") out.add(p.s); if(p.f!=="Normaal") shine=true; if(p.z==="SIR" || (p.z==="IR" && z!=="SIR")) z = p.z; }
-  return {list:[...out], shine, z}; }
+function specials(n){ const m = state.kaarten[n]||{}; const out = new Set(); let shine=false, z = "", chk = false;
+  for(const k of Object.keys(m)){ const p = parseKey(k); if(p.a){ chk = true; continue; } if(p.s!=="Gewoon") out.add(p.s); if(p.f!=="Normaal") shine=true; if(p.z==="SIR" || (p.z==="IR" && z!=="SIR")) z = p.z; }
+  return {list:[...out], shine, z, chk}; }
 
 /* soort afleiden uit de kaartnaam */
 function detectSoort(name){
@@ -496,17 +554,51 @@ function fetchMeta(cid){
 }
 async function backfillMeta(){
   const todo = new Set();
-  for(const m of Object.values(state.kaarten)) for(const k of Object.keys(m)){ const p = parseKey(k); if(p.cid && !state.meta[p.cid]) todo.add(p.cid); }
+  for(const m of Object.values(state.kaarten)) for(const k of Object.keys(m)){ const p = parseKey(k); if(p.cid && !p.a && !state.meta[p.cid]) todo.add(p.cid); }
   let changed = false;
   for(const cid of todo){
     try{ const meta = await fetchMeta(cid); changed = true;
       // zeldzaamheid alsnog invullen bij kaarten waar die nog leeg was
       const z = rarityToZ(meta.r);
-      if(z) for(const [n,m] of Object.entries(state.kaarten)) for(const [k,v] of Object.entries({...m})){ const p = parseKey(k); if(p.cid===cid && !p.z){ delete m[k]; const nk = keyOf(p.s,p.f,p.cid,z); m[nk] = (m[nk]||0) + v; } }
+      if(z) for(const [n,m] of Object.entries(state.kaarten)) for(const [k,v] of Object.entries({...m})){ const p = parseKey(k); if(p.cid===cid && !p.z && !p.a){ delete m[k]; const nk = keyOf(p.s,p.f,p.cid,z); m[nk] = (m[nk]||0) + v; } }
     }catch(e){ break; }
     await new Promise(r => setTimeout(r, 150));
   }
   if(changed){ save(); renderAll(); }
+}
+
+/* oudste kaart van een Pokémon (TCGdex sorteert standaard op uitkomstdatum, oud naar nieuw) */
+const oldestCache = {};
+async function oldestCard(n){
+  if(n in oldestCache) return oldestCache[n];
+  const ok = c => c && c.id && typeof c.image==="string" && IMG_OK.test(c.image);
+  let found = null;
+  try{ const l = await getJSON(API + "/cards?dexId=eq:" + n); if(Array.isArray(l)) found = l.find(ok) || null; }catch(e){}
+  if(!found){
+    const en = nameOf(n), re = new RegExp("(^|[^A-Za-z])" + escRe(en) + "($|[^A-Za-z])", "i");
+    const l = await getJSON(API + "/cards?name=" + encodeURIComponent(en)); // gooit bij netwerkfout
+    if(Array.isArray(l)) found = l.find(c => ok(c) && re.test(c.name||"")) || null;
+  }
+  oldestCache[n] = found; return found;
+}
+let resolving = false;
+async function resolveAuto(){
+  if(resolving) return; resolving = true;
+  try{
+    const todo = []; for(const [n,m] of Object.entries(state.kaarten)) for(const k of Object.keys(m)){ const p = parseKey(k); if(p.a && !p.cid && !(n in oldestCache && oldestCache[n]===null)){ todo.push(+n); break; } }
+    let done = 0;
+    for(const n of todo){
+      setStatus("Plaatjes zoeken voor snel toegevoegde kaarten: " + done + " van " + todo.length + "…");
+      let c; try{ c = await oldestCard(n); }catch(e){ setStatus("Plaatjes zoeken lukt nu niet (geen internet?). Later gaat het vanzelf verder."); setTimeout(()=>{ resolving=false; resolveAuto(); }, 30000); return; }
+      done++;
+      const m = state.kaarten[n];
+      if(c && m){ for(const [k,v] of Object.entries({...m})){ const p = parseKey(k); if(p.a && !p.cid){ delete m[k]; const nk = keyOf(p.s,p.f,c.id,p.z,true); m[nk] = (m[nk]||0) + v; } }
+        state.img[c.id] = c.image; save(); }
+      if(done % 8 === 0 || done===todo.length) renderAll();
+      await new Promise(r => setTimeout(r, 120));
+    }
+    if(todo.length) setStatus("Bewaard op dit apparaat.");
+  } finally { resolving = false; }
 }
 
 /* ---------- kop + regio's ---------- */
@@ -537,6 +629,7 @@ function slot(n){
       el("span",{class:"q"}, el("b",{},"?")), el("span",{class:"no"}, pad(n)), el("span",{class:"nm"}, nameOf(n)));
   }
   const sp = specials(n), tags = el("span",{class:"tags"});
+  if(sp.chk) tags.append(el("span",{class:"tag chk"}, "check"));
   if(sp.z) tags.append(el("span",{class:"tag " + sp.z.toLowerCase()}, sp.z));
   sp.list.slice(0,3).forEach(s => tags.append(el("span",{class:"tag"}, s)));
   if(sp.list.length>3) tags.append(el("span",{class:"tag"}, "+" + (sp.list.length-3)));
@@ -555,8 +648,17 @@ function slot(n){
     el("span",{class:"inner"}, el("span",{class:"row"}, pad(n), ics), art, el("span",{class:"nm"}, nameOf(n))), tags, cnt);
   colorVars(b,n); return b;
 }
+let checkOnly = false;
 function renderBoek(onlyMissing){
   const root = document.getElementById(onlyMissing ? "v-mis" : "v-boek"); root.innerHTML = "";
+  if(!onlyMissing){
+    const aa = allAuto();
+    if(!aa.poke) checkOnly = false;
+    if(aa.poke) root.append(el("div",{class:"filt"},
+      el("button",{class:"press","aria-pressed":String(!checkOnly),onclick:()=>{checkOnly=false; renderBoek(false);}},"Alles"),
+      el("button",{class:"press","aria-pressed":String(checkOnly),onclick:()=>{checkOnly=true; renderBoek(false);}},"Nog checken (" + aa.poke + ")")));
+    if(checkOnly) root.append(el("p",{class:"hint"},"Deze zijn snel toegevoegd. Tik erop en kies de echte kaart, of tik op ‘Klopt’."));
+  }
   if(onlyMissing){
     root.append(el("h2",{},"Deze moet je nog vangen"));
     root.append(el("p",{class:"hint"}, region ? "Kies hierboven een andere regio om verder te kijken." : "Tip: kies hierboven een regio, dan is de lijst korter."));
@@ -564,13 +666,13 @@ function renderBoek(onlyMissing){
   let any = false;
   REGIONS.forEach((r,i) => {
     const g = i+1; if(region && region!==g) return;
-    const nums = []; DEX.forEach((d,j)=>{ if(d[3]===g && (!onlyMissing || !has(j+1))) nums.push(j+1); });
+    const nums = []; DEX.forEach((d,j)=>{ if(d[3]===g && (onlyMissing ? !has(j+1) : (!checkOnly || autoCount(j+1)>0))) nums.push(j+1); });
     if(!nums.length) return; any = true;
     const all = DEX.filter(d=>d[3]===g).length, got = DEX.filter((d,j)=>d[3]===g && has(j+1)).length;
     const grid = el("div",{class:"grid"}); nums.forEach(n => grid.append(slot(n)));
     root.append(el("div",{class:"sheet",style:"--rc:"+REGION_COL[i]}, el("h3",{}, r, el("span",{}, onlyMissing ? "nog " + (all-got) + " te vangen" : got + " / " + all)), grid));
   });
-  if(!any) root.append(el("p",{class:"empty"}, onlyMissing ? "Allemaal gevangen in deze regio! ★" : "Nog niks in deze regio."));
+  if(!any) root.append(el("p",{class:"empty"}, onlyMissing ? "Allemaal gevangen in deze regio! ★" : checkOnly ? "Niks meer te checken in deze regio. ✓" : "Nog niks in deze regio."));
 }
 
 /* ---------- ruilen ---------- */
@@ -609,12 +711,13 @@ function bars(title, rows, note, top){
 function renderStat(){
   const root = document.getElementById("v-stat"); root.innerHTML = "";
   root.append(el("h2",{},"Overzicht"), el("p",{class:"hint"}, region ? "Alleen " + REGIONS[region-1] + ". Kies \u2018Alles\u2019 hierboven voor de hele collectie." : "Waar heb je de meeste kaarten van?"));
-  let uniek=0, kaarten=0, dub=0; const perType={}, perSoort={}, perGlans={}, perZeld={}, perSet={}; let zonderSet = 0, metPlaatje = 0;
+  let uniek=0, kaarten=0, dub=0; const perType={}, perSoort={}, perGlans={}, perZeld={}, perSet={}; let zonderSet = 0, metPlaatje = 0, nogCheck = 0;
   for(let n=1;n<=1025;n++){
     if(!inRegion(n)) continue; const t = total(n); if(!t) continue;
     uniek++; kaarten+=t; if(t>1) dub+=t-1;
     types(n).forEach(x => perType[x] = (perType[x]||0) + 1);
     for(const [k,v] of Object.entries(state.kaarten[n])){ const p = parseKey(k);
+      if(p.a){ nogCheck += v; continue; }
       perSoort[p.s] = (perSoort[p.s]||0) + v; perGlans[p.f] = (perGlans[p.f]||0) + v;
       const meta = p.cid ? state.meta[p.cid] : null;
       const zr = meta && meta.r ? meta.r : (p.z ? ZELD[p.z] : "");
@@ -631,7 +734,9 @@ function renderStat(){
     el("div",{class:"kpi"}, el("b",{}, uniek), el("span",{},"verschillende Pokémon")),
     el("div",{class:"kpi"}, el("b",{}, kaarten), el("span",{},"kaarten in totaal")),
     el("div",{class:"kpi"}, el("b",{}, dub), el("span",{},"om te ruilen")),
-    el("div",{class:"kpi"}, el("b",{}, metPlaatje), el("span",{},"met echte kaart erbij"))));
+    el("div",{class:"kpi"}, el("b",{}, metPlaatje), el("span",{},"met echte kaart erbij")),
+    nogCheck ? el("div",{class:"kpi"}, el("b",{}, nogCheck), el("span",{},"nog checken")) : null));
+  if(nogCheck) s.append(el("p",{class:"note",style:"grid-column:1/-1;margin:0 4px"}, "Snel toegevoegde kaarten tellen pas mee bij set, soort, zeldzaamheid en glans als ze gecheckt zijn."));
   const tRows = sortRows(perType).map(r => ({k:TYPE_NL[r.k]||r.k, v:r.v, color:TYPE[r.k], icon:r.k}));
   s.append(bars("Per type", tRows, "Aantal verschillende Pokémon per type. Een Pokémon met twee types telt bij allebei.", lead(tRows, k=>"Je hebt de meeste " + k + "-Pokémon!", k=>"Gelijkspel tussen " + k + ".")));
   const setRows = sortRows(perSet).slice(0,12);
@@ -654,7 +759,7 @@ function renderResults(){
   const hits = [];
   SEARCH.forEach(s => { let score = 0;
     if(num && s.n===num) score = 3;
-    for(const k of s.keys){ if(k.startsWith(q)) score = Math.max(score,2); else if(q.length>2 && k.includes(q)) score = Math.max(score,1); }
+    for(const k of s.keys){ if(k===q) score = Math.max(score,4); else if(k.startsWith(q)) score = Math.max(score,2); else if(q.length>2 && k.includes(q)) score = Math.max(score,1); }
     if(score) hits.push([score,s.n]); });
   hits.sort((a,b)=> b[0]-a[0] || a[1]-b[1]);
   if(!hits.length){ root.append(el("p",{class:"empty"},"Geen Pokémon gevonden. Kijk of de naam goed gespeld is.")); return; }
@@ -740,7 +845,9 @@ function renderPanel(){
   right.append(cz, el("p",{class:"label"},"Glimt hij?"));
   const c2 = el("div",{class:"chips"});
   AFWERKING.forEach(f => c2.append(el("button",{class:"chip press"+(f!=="Normaal"?" holo":""),"aria-pressed":String(pick.f===f),onclick:()=>{pick.f=f; renderPanel();}}, f)));
-  right.append(c2, el("button",{class:"big",onclick:()=>add(n,pick.s,pick.f,1,false,pick.cid,pick.img,pick.z)}, pick.cid ? "Deze kaart erbij" : "Kaart erbij"));
+  const ac = autoCount(n);
+  if(ac) right.append(el("p",{class:"autonote"}, ac + (ac===1?" kaart is":" kaarten zijn") + " snel toegevoegd en nog niet gecheckt. Kies je hierboven de echte kaart, dan vervangt die er één."));
+  right.append(c2, el("button",{class:"big",onclick:()=>add(n,pick.s,pick.f,1,false,pick.cid,pick.img,pick.z)}, ac ? "Vervang door deze" : pick.cid ? "Deze kaart erbij" : "Kaart erbij"));
 
   const m = state.kaarten[n];
   if(m && Object.keys(m).length){
@@ -748,7 +855,16 @@ function renderPanel(){
     const box = el("div",{class:"owned"});
     const withImg = Object.keys(m).map(parseKey).filter(p=>p.cid && state.img[p.cid]);
     const cv = coverOf(n);
-    Object.entries(m).forEach(([k,v]) => { const pk = parseKey(k);
+    Object.entries(m).sort((a,b)=>parseKey(b[0]).a - parseKey(a[0]).a).forEach(([k,v]) => { const pk = parseKey(k);
+      if(pk.a){
+        const th = pk.cid && state.img[pk.cid] ? el("img",{class:"thumb",src:imgSmall(pk.cid),alt:""}) : null;
+        box.append(el("div",{class:"own auto"}, th, el("span",{class:"what"}, "Nog checken", el("small",{}, pk.cid ? "Oudste kaart als voorbeeld" : "Plaatje wordt gezocht")),
+          el("button",{class:"okbtn press",title:"Laat zo staan",onclick:()=>{ confirmAuto(n,k); }},"Klopt"),
+          el("button",{class:"step press","aria-label":"Eén minder",onclick:()=>{ removeAuto(n,1); save(); renderAll(); renderPanel(); }},"−"),
+          el("span",{class:"n"}, v),
+          el("button",{class:"step press","aria-label":"Eén meer",onclick:()=>{ change(n,pk.s,pk.f,1,pk.cid,"",pk.z,true); renderAll(); renderPanel(); }},"+")));
+        return;
+      }
       const th = pk.cid && state.img[pk.cid] ? el("img",{class:"thumb",src:imgSmall(pk.cid),alt:""}) : null;
       const meta = pk.cid ? state.meta[pk.cid] : null;
       const coverBtn = th && withImg.length>1 ? el("button",{class:"cover press","aria-pressed":String(cv && cv.cid===pk.cid),"aria-label":"Gebruik als voorkant in het boek",title:"Voorkant in het boek",onclick:()=>{ state.cover[n] = pk.cid; save(); renderAll(); renderPanel(); }}, cv && cv.cid===pk.cid ? "★" : "☆") : null;
@@ -764,6 +880,12 @@ function renderPanel(){
   renderCards();
   const g = document.querySelector("#cardsBox .cgrid"); if(g) g.scrollTop = keepScroll;
   p.scrollTop = panelScroll;
+}
+function confirmAuto(n,k){
+  const m = state.kaarten[n]; if(!m || !m[k]) return; const p = parseKey(k), v = m[k]; delete m[k];
+  const nk = keyOf(p.s,p.f,p.cid,p.z,false); m[nk] = (m[nk]||0) + v;
+  if(p.cid && !state.meta[p.cid]) fetchMeta(p.cid).catch(()=>{});
+  save(); renderAll(); renderPanel(); last = null; toast("Gecheckt ✓");
 }
 function saveSoort(){
   const i = document.getElementById("newSoort"); const s = (i ? i.value : "").trim().slice(0,16);
@@ -839,8 +961,8 @@ document.getElementById("loginForm").addEventListener("submit", async e => {
 
 /* ---------- wijzigen ---------- */
 let last = null, toastTimer = null;
-function change(n,s,f,d,cid,img,z){
-  const k = keyOf(s,f,cid,z);
+function change(n,s,f,d,cid,img,z,a){
+  const k = keyOf(s,f,cid,z,a);
   const m = state.kaarten[n] = state.kaarten[n] || {};
   m[k] = Math.max(0,(m[k]||0) + d); if(!m[k]) delete m[k];
   if(!Object.keys(m).length){ delete state.kaarten[n]; delete state.cover[n]; }
@@ -851,7 +973,10 @@ function change(n,s,f,d,cid,img,z){
 function add(n,s,f,d,stay,cid,img,z){
   const before = total(n);
   let cBefore = 0; for(let i=1;i<=1025;i++) if(has(i)) cBefore++;
+  let replaced = [];
+  if(d>0 && !stay && autoCount(n)>0) replaced = removeAuto(n,1);
   change(n,s,f,d,cid,img,z);
+  if(replaced.length){ last = {n,s,f,cid,z,replaced}; renderAll(); closePanel(); toast(nameOf(n) + " gecheckt ✓"); if(view==="erbij"){ const q = document.getElementById("q"); q.value=""; renderResults(); } return; }
   if(cid && d>0 && !state.meta[cid]) fetchMeta(cid).then(()=>{ if(view==="stat") renderStat(); }).catch(()=>{});
   if(d>0){
     last = {n,s,f,cid,z};
@@ -873,9 +998,108 @@ function toast(msg){
   t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove("show"), 3500);
 }
 document.getElementById("undo").addEventListener("click", () => {
-  if(!last) return; change(last.n,last.s,last.f,-1,last.cid,"",last.z); last = null;
+  if(!last) return;
+  if(last.batch){ last.batch.forEach(([n,c]) => removeAuto(n,c)); save(); }
+  else { change(last.n,last.s,last.f,-1,last.cid,"",last.z);
+    if(last.replaced){ const m = state.kaarten[last.n] = state.kaarten[last.n] || {}; last.replaced.forEach(([k,c]) => m[k] = (m[k]||0) + c); save(); } }
+  last = null;
   document.getElementById("toast").classList.remove("show"); renderAll();
 });
+
+/* ---------- snel veel toevoegen ---------- */
+const LS_SEL = "verzamelboek-bulkselectie";
+let bulkMode = false, sel = {};
+try{ const s = JSON.parse(localStorage.getItem(LS_SEL) || "{}"); if(s && typeof s==="object") for(const [n,c] of Object.entries(s)){ const nn = +n, cc = Math.floor(+c); if(nn>=1 && nn<=1025 && cc>0) sel[nn] = Math.min(cc,99); } }catch(e){}
+function saveSel(){ try{ localStorage.setItem(LS_SEL, JSON.stringify(sel)); }catch(e){} }
+function selTotals(){ let c=0,p=0; for(const v of Object.values(sel)){ c+=v; p++; } return {c,p}; }
+function bump(n, d){ const v = (sel[n]||0) + d; if(v>0) sel[n] = Math.min(v,99); else delete sel[n]; saveSel(); renderTray(); }
+function setMode(b){
+  bulkMode = b;
+  document.getElementById("mOne").setAttribute("aria-pressed", String(!b));
+  document.getElementById("mBulk").setAttribute("aria-pressed", String(b));
+  document.getElementById("oneBox").hidden = b; document.getElementById("bulkBox").hidden = !b;
+  document.getElementById("regions").style.display = b ? "" : "none";
+  if(b) renderBulk(); else { renderResults(); setTimeout(()=>document.getElementById("q").focus(), 30); }
+  renderTray();
+}
+function renderTray(){
+  const tr = document.getElementById("tray"), t = selTotals();
+  const on = view==="erbij" && bulkMode && t.c>0;
+  tr.hidden = !on; document.documentElement.style.setProperty("--toastb", on ? "170px" : "96px");
+  if(!on) return; tr.innerHTML = "";
+  tr.append(el("span",{class:"sum"}, el("b",{}, t.c), t.c===1 ? " kaart" : " kaarten", el("br"), t.p + (t.p===1?" Pokémon":" Pokémon")),
+    el("button",{class:"clr press",onclick:()=>{ if(confirm("Selectie wissen?")){ sel = {}; saveSel(); renderBulk(); renderTray(); } }},"Wissen"),
+    el("button",{class:"go press",onclick:bulkCommit},"Toevoegen"));
+}
+function bulkRow(n){
+  const d = DEX[n-1], alt = [d[1],d[2]].filter(Boolean).join(" · ");
+  const dot = el("span",{class:"dot"}); dot.append(icon(types(n)[0]));
+  const cnt = el("span",{class:"selc" + (sel[n] ? "" : " zero")}, sel[n] || 0);
+  const row = el("div",{class:"bres"}, dot, el("span",{class:"nm"}, nameOf(n), el("small",{}, pad(n) + (alt ? " · " + alt : "") + (has(n) ? " · heb ik al " + total(n) : ""))),
+    el("button",{class:"step press","aria-label":"Eén minder",onclick:()=>{ bump(n,-1); cnt.textContent = sel[n]||0; cnt.classList.toggle("zero",!sel[n]); syncTile(n); }},"−"),
+    cnt,
+    el("button",{class:"plus1 press","aria-label":"Eén erbij",onclick:()=>{ bump(n,1); cnt.textContent = sel[n]; cnt.classList.remove("zero"); syncTile(n); }},"+1"));
+  colorVars(row,n); return row;
+}
+function bulkTile(n){
+  const b = el("button",{class:"btile press" + (sel[n] ? " sel" : ""),"data-n":n,onclick:e=>{ if(e.target.classList.contains("min")) return; bump(n,1); syncTile(n); }},
+    el("span",{class:"no"}, pad(n)), el("span",{class:"nm"}, nameOf(n)), has(n) ? el("span",{class:"hv"}, "heb ik: " + total(n)) : null);
+  if(sel[n]){ b.append(el("span",{class:"badge"}, "×" + sel[n]), el("span",{class:"min",role:"button","aria-label":"Eén minder",onclick:e=>{ e.stopPropagation(); bump(n,-1); syncTile(n); }},"−")); }
+  colorVars(b,n); return b;
+}
+function syncTile(n){ const old = document.querySelector('#bulkBox .btile[data-n="'+n+'"]'); if(old) old.replaceWith(bulkTile(n)); }
+function renderBulkResults(){
+  const box = document.getElementById("bres"); if(!box) return; box.innerHTML = "";
+  const q = fold(document.getElementById("bq").value || "");
+  if(!q) return;
+  const num = /^\d+$/.test(q) ? parseInt(q,10) : 0, hits = [];
+  SEARCH.forEach(s => { let score = 0; if(num && s.n===num) score = 3;
+    for(const k of s.keys){ if(k===q) score = Math.max(score,4); else if(k.startsWith(q)) score = Math.max(score,2); else if(q.length>2 && k.includes(q)) score = Math.max(score,1); }
+    if(score) hits.push([score,s.n]); });
+  hits.sort((a,b)=> b[0]-a[0] || a[1]-b[1]);
+  if(!hits.length){ box.append(el("p",{class:"empty"},"Geen Pokémon gevonden.")); return; }
+  hits.slice(0,6).forEach(([,n]) => box.append(bulkRow(n)));
+}
+function renderBulk(){
+  const root = document.getElementById("bulkBox"); root.innerHTML = "";
+  const inp = el("input",{id:"bq",type:"search",placeholder:"Typ een naam, tik +1…",autocomplete:"off",autocapitalize:"off",spellcheck:"false","aria-label":"Zoek een Pokémon",enterkeyhint:"done"});
+  inp.addEventListener("input", renderBulkResults);
+  inp.addEventListener("focus", () => inp.select());
+  inp.addEventListener("keydown", e => { if(e.key==="Enter"){ const r = document.querySelector("#bres .plus1"); if(r){ r.click(); inp.value = ""; renderBulkResults(); } } });
+  root.append(el("p",{class:"hint",style:"margin-top:10px"},"Pak je stapel en tik voor elke kaart +1. Heb je er drie van? Tik drie keer. Druk daarna op Toevoegen. De app zet er de oudste kaart als voorbeeld bij; later kun je per Pokémon de echte kaart kiezen."),
+    el("div",{class:"search"}, inp), el("div",{class:"results",id:"bres"}));
+  const g = region || 0;
+  root.append(el("p",{class:"bsub"}, g ? "Of tik ze aan in " + REGIONS[g-1] : "Of tik ze aan (kies hierboven een regio voor een kortere lijst)"));
+  const grid = el("div",{class:"bgrid"});
+  for(let n=1;n<=1025;n++) if(!g || DEX[n-1][3]===g) grid.append(bulkTile(n));
+  root.append(grid);
+  renderBulkResults();
+}
+function bulkCommit(){
+  const entries = Object.entries(sel).map(([n,c]) => [+n,c]); if(!entries.length) return;
+  let before = 0; for(let i=1;i<=1025;i++) if(has(i)) before++;
+  entries.forEach(([n,c]) => change(n,"Gewoon","Normaal",c,"","","",true));
+  let after = 0; for(let i=1;i<=1025;i++) if(has(i)) after++;
+  const t = selTotals(); sel = {}; saveSel();
+  last = {batch: entries};
+  renderAll(); renderTray();
+  const nieuw = after - before, ms = MILESTONES.filter(m => m>before && m<=after).pop() || 0;
+  const msg = t.c + (t.c===1?" kaart":" kaarten") + " toegevoegd" + (nieuw ? ", " + nieuw + " nieuwe Pokémon!" : "");
+  if(nieuw) burst(nieuw, t.c, ms, msg); else toast(msg);
+  resolveAuto();
+}
+function burst(nieuw, kaarten, ms, msg){
+  const r = document.getElementById("reveal"); r.innerHTML = "";
+  const conf = el("div",{class:"confetti"}); const cols = ["#ffcb3d","#7af0ff","#ff8fd0","#7affc1","#b48cff"];
+  for(let i=0;i<(ms?100:60);i++) conf.append(el("i",{style:`left:${Math.random()*100}%;background:${cols[i%cols.length]};animation-delay:${(Math.random()*0.8).toFixed(2)}s;animation-duration:${(1.8+Math.random()*1.6).toFixed(2)}s`}));
+  r.append(el("div",{class:"rays"}), conf, el("div",{class:"rstack burst"},
+    el("div",{class:"rtext"}, ms ? "Mijlpaal: " + ms + " Pokémon!" : "Nieuw gevangen!"), el("b",{}, "+" + nieuw),
+    el("div",{class:"rsub"}, nieuw===1 ? "nieuwe Pokémon in je boek" : "nieuwe Pokémon in je boek"), el("div",{class:"rsub"},"Tik om verder te gaan")));
+  document.getElementById("toast").classList.remove("show");
+  pendingMsg = msg; r.hidden = false; clearTimeout(revealTimer); revealTimer = setTimeout(closeReveal, 5000);
+}
+document.getElementById("mOne").addEventListener("click", () => setMode(false));
+document.getElementById("mBulk").addEventListener("click", () => setMode(true));
 
 /* ---------- onthulling ---------- */
 let revealTimer = null, pendingMsg = "";
@@ -900,7 +1124,7 @@ function reveal(n, shine, s, bigImg, milestone){
 }
 function closeReveal(){ const r = document.getElementById("reveal"); if(r.hidden) return; r.hidden = true; r.innerHTML = ""; clearTimeout(revealTimer);
   if(pendingMsg){ toast(pendingMsg); pendingMsg = ""; }
-  if(view==="erbij") document.getElementById("q").focus(); }
+  if(view==="erbij" && !bulkMode) document.getElementById("q").focus(); }
 document.getElementById("reveal").addEventListener("click", closeReveal);
 
 /* ---------- 3D-kantelen op desktop ---------- */
@@ -919,11 +1143,11 @@ function show(v){
   view = v;
   document.querySelectorAll("nav.tabs button").forEach(b => { if(b.dataset.v===v) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
   ["boek","erbij","mis","dub","stat"].forEach(x => document.getElementById("v-"+x).hidden = x!==v);
-  document.getElementById("regions").style.display = v==="erbij" ? "none" : "";
-  renderView(); window.scrollTo(0,0);
-  if(v==="erbij") setTimeout(()=>document.getElementById("q").focus(), 50);
+  document.getElementById("regions").style.display = (v==="erbij" && !bulkMode) ? "none" : "";
+  renderView(); window.scrollTo(0,0); renderTray();
+  if(v==="erbij" && !bulkMode) setTimeout(()=>document.getElementById("q").focus(), 50);
 }
-function renderView(){ if(view==="boek") renderBoek(false); else if(view==="mis") renderBoek(true); else if(view==="dub") renderDub(); else if(view==="stat") renderStat(); else renderResults(); }
+function renderView(){ if(view==="boek") renderBoek(false); else if(view==="mis") renderBoek(true); else if(view==="dub") renderDub(); else if(view==="stat") renderStat(); else if(bulkMode) renderBulk(); else renderResults(); }
 function renderAll(){ renderHead(); renderView(); }
 document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => show(b.dataset.v)));
 document.getElementById("q").addEventListener("input", renderResults);
@@ -947,7 +1171,7 @@ function start(){
   if(started) return; started = true;
   loadLocal(); setStatus("Bewaard op dit apparaat."); renderAll();
   if(!state.owner) openOwner();
-  setTimeout(backfillMeta, 800);
+  setTimeout(() => { resolveAuto().then(backfillMeta); }, 800);
 }
 if(authed()) start(); else showGate();
 </script>
