@@ -272,6 +272,19 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
   background:linear-gradient(180deg,transparent,rgba(10,14,40,.92) 55%)}
 .slot.miss .lbl small{display:block;font-size:.72rem;opacity:.8}
 .slot.miss .qb{position:absolute;right:6px;top:6px;width:26px;height:26px;border-radius:50%;background:var(--gold);color:#18204a;font-family:var(--disp);display:grid;place-items:center;box-shadow:0 2px 0 var(--gold-d)}
+/* ---------- zoekfilter ---------- */
+.vfilter{display:flex;align-items:center;gap:10px;margin:14px 18px 0;padding:0 8px 0 14px;background:var(--sleeve);border-radius:16px;border:3px solid var(--line);box-shadow:var(--shadow)}
+.vfilter:focus-within{border-color:var(--gold)}
+.vfilter[hidden]{display:none}
+.vfilter svg{font-size:1.3rem;color:var(--soft)}
+.vfilter input{flex:1;min-width:0;border:0;background:transparent;font-size:1.15rem;font-weight:700;padding:11px 0;outline:none}
+.vfilter input::-webkit-search-cancel-button{display:none}
+.vfilter button{border:0;width:36px;height:36px;border-radius:10px;background:var(--page);font-size:1.3rem;font-weight:800;color:var(--soft)}
+.found{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:10px 4px 0;font-weight:700;color:var(--soft)}
+.found button{border:0;border-radius:10px;padding:6px 12px;font-weight:800;background:var(--night2);color:#fff}
+.bactions{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.bactions button{border:0;border-radius:12px;padding:9px 14px;font-weight:800;background:var(--night2);color:#fff;box-shadow:0 3px 0 var(--night)}
+.bactions button.lite{background:var(--sleeve);color:var(--ink);box-shadow:inset 0 0 0 3px var(--line)}
 /* ---------- snel veel (bulk) ---------- */
 .modes{display:flex;gap:6px;background:var(--sleeve);border-radius:16px;padding:5px;box-shadow:var(--shadow);margin:12px 0 4px;max-width:520px}
 .modes button{flex:1;border:0;border-radius:12px;padding:8px 10px;font-weight:800;font-size:1.05rem;background:transparent;color:var(--soft)}
@@ -317,6 +330,7 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 .burst b{font-family:var(--disp);font-weight:400;font-size:5rem;line-height:1;color:var(--gold);text-shadow:0 5px 0 var(--gold-d)}
 /* ---------- mobiel ---------- */
 @media (max-width:440px){
+  .vfilter{margin:12px 10px 0}
   .tray{padding:8px 8px 8px 12px;gap:6px;bottom:calc(80px + env(safe-area-inset-bottom,0px))}
   .tray button{padding:9px 10px}
   .tray .go{font-size:1.1rem}
@@ -348,6 +362,7 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
   nav.tabs button[aria-current="page"]{background:rgba(255,255,255,.12)}
   main{padding:10px 24px 60px}
   .regions{padding:16px 24px 6px;flex-wrap:wrap;overflow:visible}
+  .vfilter{margin:16px 24px 0;max-width:520px}
   .grid{grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:12px}
   .slot.has .art{font-size:2.8rem}
   .search{top:72px}
@@ -409,6 +424,9 @@ h2{font-family:var(--disp);font-weight:400;font-size:1.8rem;margin:18px 4px 6px}
 </nav>
 
 <div class="wrap">
+  <div class="vfilter" id="vfilter"><svg viewBox="0 0 24 24" class="ti"><path d="M10.5 3a7.5 7.5 0 0 1 6 12l4.3 4.3-1.5 1.5-4.3-4.3A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/></svg>
+    <input id="fq" type="search" placeholder="Zoek in je boek…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Zoek een Pokémon" enterkeyhint="search">
+    <button id="fclear" class="press" aria-label="Zoekveld leegmaken" hidden>×</button></div>
   <div class="regions" id="regions" role="group" aria-label="Kies een regio"></div>
   <main>
     <section class="view" id="v-boek"></section>
@@ -704,6 +722,25 @@ function slot(n){
     el("span",{class:"inner"}, el("span",{class:"row"}, pad(n), ics), art, el("span",{class:"nm"}, nameOf(n))), tags, cnt);
   colorVars(b,n); return b;
 }
+/* zoekfilter voor Boek, Mis ik nog en Ruilen */
+let filterQ = "", filterTimer = null;
+function matches(n){
+  if(!filterQ) return true;
+  if(/^\d+$/.test(filterQ)) return n===parseInt(filterQ,10);
+  return SEARCH[n-1].keys.some(k => k.includes(filterQ));
+}
+function foundBar(root, count){
+  if(!filterQ) return;
+  const row = el("div",{class:"found"}, el("span",{}, count ? count + (count===1?" Pokémon gevonden":" Pokémon gevonden") + (region ? " in " + REGIONS[region-1] : "") : "Niks gevonden" + (region ? " in " + REGIONS[region-1] : "") + "."));
+  if(region) row.append(el("button",{class:"press",onclick:()=>{ region = 0; renderAll(); }},"Zoek overal"));
+  root.append(row);
+}
+document.getElementById("fq").addEventListener("input", e => {
+  clearTimeout(filterTimer);
+  filterTimer = setTimeout(() => { filterQ = fold(e.target.value || ""); document.getElementById("fclear").hidden = !e.target.value; renderView(); }, 120);
+});
+document.getElementById("fq").addEventListener("keydown", e => { if(e.key==="Enter") e.target.blur(); });
+document.getElementById("fclear").addEventListener("click", () => { const i = document.getElementById("fq"); i.value = ""; filterQ = ""; document.getElementById("fclear").hidden = true; renderView(); i.focus(); });
 let checkOnly = false;
 function renderBoek(onlyMissing){
   const root = document.getElementById(onlyMissing ? "v-mis" : "v-boek"); root.innerHTML = "";
@@ -719,24 +756,27 @@ function renderBoek(onlyMissing){
     root.append(el("h2",{},"Deze moet je nog vangen"));
     root.append(el("p",{class:"hint"}, region ? "Kies hierboven een andere regio om verder te kijken." : "Tip: kies hierboven een regio, dan is de lijst korter."));
   }
-  let any = false;
+  let any = false, foundCount = 0;
+  const fb = el("div",{}); root.append(fb);
   REGIONS.forEach((r,i) => {
     const g = i+1; if(region && region!==g) return;
-    const nums = []; DEX.forEach((d,j)=>{ if(d[3]===g && (onlyMissing ? !has(j+1) : (!checkOnly || autoCount(j+1)>0))) nums.push(j+1); });
-    if(!nums.length) return; any = true;
+    const nums = []; DEX.forEach((d,j)=>{ if(d[3]===g && matches(j+1) && (onlyMissing ? !has(j+1) : (!checkOnly || autoCount(j+1)>0))) nums.push(j+1); });
+    if(!nums.length) return; any = true; foundCount += nums.length;
     const all = DEX.filter(d=>d[3]===g).length, got = DEX.filter((d,j)=>d[3]===g && has(j+1)).length;
     const grid = el("div",{class:"grid"}); nums.forEach(n => grid.append(onlyMissing ? missSlot(n) : slot(n)));
     root.append(el("div",{class:"sheet",style:"--rc:"+REGION_COL[i]}, el("h3",{}, r, el("span",{}, onlyMissing ? "nog " + (all-got) + " te vangen" : got + " / " + all)), grid));
   });
-  if(!any) root.append(el("p",{class:"empty"}, onlyMissing ? "Allemaal gevangen in deze regio! ★" : checkOnly ? "Niks meer te checken in deze regio. ✓" : "Nog niks in deze regio."));
+  foundBar(fb, foundCount);
+  if(!any && !filterQ) root.append(el("p",{class:"empty"}, onlyMissing ? "Allemaal gevangen in deze regio! ★" : checkOnly ? "Niks meer te checken in deze regio. ✓" : "Nog niks in deze regio."));
 }
 
 /* ---------- ruilen ---------- */
 function renderDub(){
   const root = document.getElementById("v-dub"); root.innerHTML = "";
   root.append(el("h2",{},"Ruilen"), el("p",{class:"hint"},"Hier heb je er meer dan één van. Eén houd je, de rest kun je ruilen."));
-  const list = []; for(let n=1;n<=1025;n++){ if(inRegion(n) && total(n)>1) list.push(n); }
-  if(!list.length){ root.append(el("p",{class:"empty"},"Nog geen dubbele kaarten.")); return; }
+  const list = []; for(let n=1;n<=1025;n++){ if(inRegion(n) && total(n)>1 && matches(n)) list.push(n); }
+  foundBar(root, list.length);
+  if(!list.length){ if(!filterQ) root.append(el("p",{class:"empty"},"Nog geen dubbele kaarten.")); return; }
   const box = el("div",{class:"duplist"});
   list.forEach(n => {
     const parts = Object.entries(state.kaarten[n]).map(([k,v]) => v + "× " + describe(parseKey(k)).replaceAll(" · "," "));
@@ -1075,6 +1115,7 @@ function setMode(b){
   document.getElementById("mBulk").setAttribute("aria-pressed", String(b));
   document.getElementById("oneBox").hidden = b; document.getElementById("bulkBox").hidden = !b;
   document.getElementById("regions").style.display = b ? "" : "none";
+  document.getElementById("vfilter").hidden = true;
   if(b) renderBulk(); else { renderResults(); setTimeout(()=>document.getElementById("q").focus(), 30); }
   renderTray();
 }
@@ -1124,12 +1165,20 @@ function renderBulk(){
   inp.addEventListener("input", renderBulkResults);
   inp.addEventListener("focus", () => inp.select());
   inp.addEventListener("keydown", e => { if(e.key==="Enter"){ const r = document.querySelector("#bres .plus1"); if(r){ r.click(); inp.value = ""; renderBulkResults(); } } });
-  root.append(el("p",{class:"hint",style:"margin-top:10px"},"Tik voor elke kaart +1. Drie dezelfde? Drie keer tikken. Klaar? Druk op Toevoegen."),
+  root.append(el("p",{class:"hint",style:"margin-top:10px"},"Tik voor elke kaart +1, met − haal je er één af. Snel beginnen? Kies een regio, vink alles aan en haal weg wat hij niet heeft."),
     el("div",{class:"search"}, inp), el("div",{class:"results",id:"bres"}));
   const g = region || 0;
   root.append(el("p",{class:"bsub"}, g ? "Of tik ze aan in " + REGIONS[g-1] : "Of tik ze aan (kies hierboven een regio voor een kortere lijst)"));
+  const inG = []; for(let n=1;n<=1025;n++) if(!g || DEX[n-1][3]===g) inG.push(n);
+  const label = g ? REGIONS[g-1] : "alle regio's";
+  const nSel = inG.filter(n => sel[n]).length;
+  root.append(el("div",{class:"bactions"},
+    el("button",{class:"press",onclick:()=>{
+      if(!g && !confirm("Alle 1025 Pokémon aanvinken? Daarna vink je uit wat hij niet heeft.")) return;
+      inG.forEach(n => { if(!sel[n]) sel[n] = 1; }); saveSel(); renderBulk(); renderTray(); toast(inG.length + " aangevinkt in " + label + ". Tik op − bij wat hij niet heeft."); }}, "Alles in " + label + " aanvinken"),
+    nSel ? el("button",{class:"press lite",onclick:()=>{ if(!confirm("Alles in " + label + " uitvinken?")) return; inG.forEach(n => delete sel[n]); saveSel(); renderBulk(); renderTray(); }}, "Alles uitvinken") : null));
   const grid = el("div",{class:"bgrid"});
-  for(let n=1;n<=1025;n++) if(!g || DEX[n-1][3]===g) grid.append(bulkTile(n));
+  inG.forEach(n => grid.append(bulkTile(n)));
   root.append(grid);
   renderBulkResults();
 }
@@ -1202,6 +1251,7 @@ function show(v){
   document.querySelectorAll("nav.tabs button").forEach(b => { if(b.dataset.v===v) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
   ["boek","erbij","mis","dub","stat"].forEach(x => document.getElementById("v-"+x).hidden = x!==v);
   document.getElementById("regions").style.display = (v==="erbij" && !bulkMode) ? "none" : "";
+  document.getElementById("vfilter").hidden = !(v==="boek" || v==="mis" || v==="dub");
   renderView(); window.scrollTo(0,0); renderTray();
   if(v==="erbij" && !bulkMode) setTimeout(()=>document.getElementById("q").focus(), 50);
 }
